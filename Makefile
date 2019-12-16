@@ -35,7 +35,6 @@ $(NAME): $(OBJ) $(LIBFT) $(MINILIBX)
 	@echo "${DONE}Making libcub3d.a${NC}"
 	@cp libft/libft.a $(NAME)
 	@ar rcs $(NAME) $(OBJ)
-	@ar rcs $(NAME) minilibx_macos/libmlx.a
 
 %.o: %.c libftprintf.h libft/libft.h
 	@$(CC) -o $@ -c $<
@@ -57,6 +56,6 @@ bonus: $(NAME)
 re: fclean all
 
 test:
-	gcc -Wall -Werror -Wextra -O3 main.c -L. -lcub3d -o cub3d && ./cub3d test.cub
+	gcc -Wall -Werror -Wextra -O3 main.c minilibx_macos/libmlx.a -L. -lcub3d -framework OpenGL -framework AppKit -o cub3d && ./cub3d test.cub
 
 .PHONY:	all clean fclean re bonus test
