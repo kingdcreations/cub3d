@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/10 17:07:44 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/12/16 15:48:31 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/12/20 10:56:39 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -23,6 +23,10 @@
 # define RIGHT 124
 # define UP 126
 # define DOWN 125
+# define WALLWD 64
+
+# define SLEFT 0
+# define SRIGHT 2
 
 # define PI 3.141592654
 
@@ -31,6 +35,12 @@ typedef struct	s_pl
 	float	x;
 	float	y;
 	float	look;
+
+	float		impx;
+	float		impy;
+
+	float		impx2;
+	float		impy2;
 }				t_pl;
 
 typedef struct	s_file
@@ -42,6 +52,8 @@ typedef struct	s_file
 	int		rx;
 	int		ry;
 	int		pl;
+	int		plx;
+	int		ply;
 
 	char	*no;
 	char	*so;
@@ -64,16 +76,22 @@ typedef struct	s_win
 {
 	void	*mlx;
 	void	*win;
+	void	*img;
+	int	*imgbuf;
 	t_pl	*player;
+	t_file *file;
 
 	int		up;
 	int		down;
 	int		left;
 	int		right;
 
-	int		side;
+	int		sleft;
+	int		sright;
 
 	char	*wall[4];
+	int	wall_w[4];
+	int	wall_h[4];
 }				t_win;
 
 void			ft_parsefile(t_file *file, char *filename);

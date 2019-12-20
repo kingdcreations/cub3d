@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/16 14:46:23 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/12/16 15:00:13 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/12/17 14:42:24 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -72,7 +72,11 @@ void	ft_maperror(t_file *file, char c, int j, int k)
 	if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
 	{
 		if (!file->pl)
+		{
 			file->pl = c;
+			file->plx = k + 1;
+			file->ply = j + 1;
+		}
 		else
 			ft_error(file, "Map must contain one single player.", j + 1);
 	}

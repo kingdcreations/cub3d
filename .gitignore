@@ -2,3 +2,5 @@
 *.o
 cub3d
 cub3d.dSYM
+a.out
+.DS_Store
