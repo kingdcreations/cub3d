@@ -18,6 +18,7 @@ SRC =	main.c \
 			ft_managefile.c \
 			ft_handlefile.c \
 			ft_errorfile.c \
+			ft_save.c \
 
 OBJ		=	$(SRC:%.c=%.o)
 
@@ -57,5 +58,8 @@ re: fclean all
 
 test:
 	gcc -Wall -Werror -Wextra -O3 main.c minilibx_macos/libmlx.a -L. -lcub3d -framework OpenGL -framework AppKit -o cub3d && ./cub3d test.cub
+
+bmp:
+	gcc -g3 -Wall -Werror -Wextra -O3 main.c minilibx_macos/libmlx.a -L. -lcub3d -framework OpenGL -framework AppKit -o cub3d && ./cub3d test.cub -save
 
 .PHONY:	all clean fclean re bonus test

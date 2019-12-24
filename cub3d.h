@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/10 17:07:44 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/12/20 10:56:39 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/12/24 16:06:27 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -35,6 +35,10 @@ typedef struct	s_pl
 	float	x;
 	float	y;
 	float	look;
+
+	float		spx;
+	float		spy;
+	float		splen;
 
 	float		impx;
 	float		impy;
@@ -90,8 +94,12 @@ typedef struct	s_win
 	int		sright;
 
 	char	*wall[4];
-	int	wall_w[4];
-	int	wall_h[4];
+	int		wall_w[4];
+	int		wall_h[4];
+
+	char	*sp;
+	int		sp_h;
+	int		sp_w;
 }				t_win;
 
 void			ft_parsefile(t_file *file, char *filename);
@@ -108,5 +116,8 @@ int				ft_splitac(char **av);
 char			*ft_doubledef(t_file *file, char *var,
 	char **param, char *line);
 void			ft_checkfc(t_file *file, char *line);
+void			c3d_init(t_win *c3d);
+void			ft_write_header(t_win *c3d, int fd);
+void			ft_mirror_img(t_win *c3d, int fd);
 
 #endif

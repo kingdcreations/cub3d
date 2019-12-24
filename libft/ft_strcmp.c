@@ -1,40 +1,24 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   ft_strjoin.c                                     .::    .:/ .      .::   */
+/*   ft_strcmp.c                                      .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/10/10 09:41:18 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/12/24 14:43:35 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Created: 2019/10/08 15:12:00 by tmarcon      #+#   ##    ##    #+#       */
+/*   Updated: 2019/12/23 10:59:04 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin(char *s1, char *s2)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	int		i;
-	int		j;
-	int		len;
-	char	*res;
+	size_t i;
 
-	if (!s1 || !s2)
-		return (NULL);
-	len = ft_strlen(s1) + ft_strlen(s2);
-	if (!(res = malloc(sizeof(char) * (len + 1))))
-		return (NULL);
 	i = 0;
-	while (s1[i])
-	{
-		res[i] = s1[i];
+	while (s1[i] == s2[i] && s1[i] && s2[i])
 		i++;
-	}
-	j = 0;
-	while (s2[j])
-		res[i++] = s2[j++];
-	res[i] = '\0';
-	free(s1);
-	return (res);
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
