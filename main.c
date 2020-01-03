@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/11/29 12:13:52 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/12/24 18:43:42 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/03 16:52:10 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,108 +16,55 @@
 #include "minilibx_macos/mlx.h"
 #include "gnl/get_next_line.h"
 
-unsigned	rgbtohex(int r, int g, int b)
-{
-	return(r * 65536 + g * 256 + b);
-}
-
 void raycast(t_win *c3d, float len, int j, int horiz)
 {
 	float shift;
-	int i;
-	char sideh;
-	char sidev;
-	int o = 0;
-	float test;
-	float rest;
 
-	len = WALLWD/len*700;
+	len = WALLWD / len * ((c3d->file->rx/2) * tan(PI * 60 / 180));
 	shift = c3d->file->ry/2 - len/2;
 
-	if (c3d->player->y < c3d->player->impy)
-		sideh = 'N';
-	else
-		sideh = 'S';
-	if (c3d->player->x < c3d->player->impx)
-		sidev = 'E';
-	else
-		sidev = 'W';
+	/* CEIL */
+	ft_draw_ceil(c3d, shift, j);
 
-	/* SKY */
-	i = 0;
-	while(i < shift)
-	{
-		c3d->imgbuf[i * c3d->file->rx+ j] = rgbtohex(c3d->file->f[0], c3d->file->f[1], c3d->file->f[2]);
-		i++;
-	}
 	/* WALLS */
-	i = shift;
-	while(i < len + shift && i < c3d->file->ry)
-	{
-		if (i > 0 && i < c3d->file->ry)
-		{
-			if (horiz && sideh == 'N')
-			{
-				test = ((int)((o/(len/c3d->wall_h[0]))+1) * c3d->wall_h[0]);
-				rest = (int)(c3d->wall_h[0] - (c3d->player->impx/(64/c3d->wall_h[0])))%c3d->wall_h[0] - 1;
-				c3d->imgbuf[i * c3d->file->rx + j] = mlx_get_color_value(c3d->mlx , c3d->wall[0][(int)(test + rest) * 4] + c3d->wall[0][(int)(test + rest) * 4 + 1] * 256 + c3d->wall[0][(int)(test + rest) * 4 + 2] * 65536)%16777216;
-			}
-			else if (horiz && sideh == 'S')
-			{
-				test = ((int)((o/(len/c3d->wall_h[1]))) * c3d->wall_h[1]);
-				rest = ((int)c3d->player->impx/(64/c3d->wall_h[1]))%c3d->wall_h[1];
-				c3d->imgbuf[i * c3d->file->rx + j] = mlx_get_color_value(c3d->mlx ,c3d->wall[1][(int)(test + rest) * 4] + c3d->wall[1][(int)(test + rest) * 4 + 1] * 256 + c3d->wall[1][(int)(test + rest) * 4 + 2] * 65536)%16777216;
-			}
-			else if (!horiz && sidev == 'E')
-			{
-				test = ((int)((o/(len/c3d->wall_h[2]))) * c3d->wall_h[2]);
-				rest = ((int)c3d->player->impy/(64/c3d->wall_h[2]))%c3d->wall_h[2];
-				c3d->imgbuf[i * c3d->file->rx + j] = mlx_get_color_value(c3d->mlx ,c3d->wall[2][(int)(test + rest) * 4] + c3d->wall[2][(int)(test + rest) * 4 + 1] * 256 + c3d->wall[2][(int)(test + rest) * 4 + 2] * 65536)%16777216;
-			}
-			else if (!horiz && sidev == 'W')
-			{
-				test = ((int)((o/(len/c3d->wall_h[3])) + 1) * c3d->wall_h[3]);
-				rest = (c3d->wall_h[3] - (int)c3d->player->impy/(64/c3d->wall_h[3]))%c3d->wall_h[3] - 1;
-				c3d->imgbuf[i * c3d->file->rx + j] = mlx_get_color_value(c3d->mlx ,c3d->wall[3][(int)(test + rest) * 4] + c3d->wall[3][(int)(test + rest) * 4 + 1] * 256 + c3d->wall[3][(int)(test + rest) * 4 + 2] * 65536)%16777216;
-			}
-		}
-		i++;
-		o++;
-	}
-
+	ft_draw_wall(c3d, len, j, horiz);
 
 	/* FLOOR */
-	i = c3d->file->ry;
-	while(i > shift + len - 1)
-	{
-		if (j >= 0 && j < c3d->file->rx && i >= 0 && i < c3d->file->ry)
-			c3d->imgbuf[i * c3d->file->rx + j] = rgbtohex(c3d->file->c[0], c3d->file->c[1], c3d->file->c[2]);
-		i--;
-	}
+	ft_draw_floor(c3d, shift, j, len);
 
-	len = WALLWD/(sqrt(pow(c3d->player->x - 64 * 27, 2) + pow(c3d->player->y - 64 * 3, 2)))*700;
-	o = 0;
-	int kk = j;
-	i = c3d->file->ry/2 - len/2;
-	while(i < c3d->file->ry + (c3d->file->ry/2 - len/2) && i < c3d->file->ry)
-	{
-		if (i > 0 && i < (c3d->file->ry/2 - len/2) + len && (c3d->player->spx != -1 || c3d->player->spy != -1))
-		{
-				test = c3d->wall_w[3] * (int)((o/(len/c3d->wall_w[3])));
-				rest = (c3d->wall_h[3] - (int)c3d->player->spy/(64/c3d->wall_h[3]))%c3d->wall_w[3];
-				c3d->imgbuf[i * c3d->file->rx + j] = mlx_get_color_value(c3d->mlx ,c3d->wall[3][(int)(test + rest) * 4] + c3d->wall[3][(int)(test + rest) * 4 + 1] * 256 + c3d->wall[3][(int)(test + rest) * 4 + 2] * 65536)%16777216;
+
+	/* SPRITE */
+	int o;
+	int i;
+	float rest;
+	float test;
+	// if (c3d->player->look > 180 && c3d->player->look < 360)
+	// {
+		len = WALLWD/(sqrt(pow(c3d->player->x - 64 * 27, 2) + pow(c3d->player->y - 64 * 3, 2))) * ((c3d->file->rx/2) * tan(PI * 60 / 180));
+		o = 0;
+		shift = c3d->file->ry/2 - len/2;
+		i = shift;
+		int pos = c3d->file->rx + (c3d->player->x - 64 * 27);
+		float i2 = pos/2 - len/2;
+		if (j > i2 && j < pos - i2)
+			while(i < c3d->file->ry + shift + o && i < c3d->file->ry)
+			{
+				if (i >= 0 && i < (c3d->file->ry/2 - len/2) + len - 1)
+				{
+						test = c3d->sp_w * (int)((o/(len/c3d->sp_w)));
+						rest = (int)((j - i2)/(len/c3d->sp_h))%64;
+						if (i * c3d->file->rx + j < c3d->file->ry * c3d->file->rx + c3d->file->rx && c3d->sp[(int)(test + rest)])
+							c3d->imgbuf[i * c3d->file->rx + j] = c3d->sp[(int)(test + rest)];
+				}
+				i++;
 				o++;
-				kk++;
-		}
-		i++;
-	}
-
-
+			}
+	// }
 }
 
 
-float line2(t_win *c3d, float x0, float y0, float ang) {
-
+float line2(t_win *c3d, float x0, float y0, float ang)
+{
 	float angle = -ang;
 	float Ay;
 	float Ax;
@@ -162,13 +109,11 @@ float line2(t_win *c3d, float x0, float y0, float ang) {
 	}
 	c3d->player->impx = Ax;
 	c3d->player->impy = Ay;
-	if (sidev == 'W')
-		c3d->player->impx = Ax+1;
 	return (sqrt(pow(x0 - Ax, 2) + pow(y0 - Ay, 2)));
 }
 
-float line3(t_win *c3d, float x0, float y0, float ang) {
-
+float line3(t_win *c3d, float x0, float y0, float ang)
+{
 	float angle = -ang;
 	float Ya;
 	float Xa;
@@ -214,9 +159,65 @@ float line3(t_win *c3d, float x0, float y0, float ang) {
 	}
 	c3d->player->impx2 = Bx;
 	c3d->player->impy2 = By;
-	if (sidev == 'S')
-		c3d->player->impy2+= 1;
 	return(sqrt(pow(x0 - Bx, 2) + pow(y0 - By, 2)));
+}
+
+void	drawlifecont(t_win *c3d, int pad)
+{
+	int i;
+	int j = 0;
+	int max = c3d->file->rx - pad * 2;
+
+	while (j < 5)
+	{
+		i = pad - 5;
+		while (i < max + pad + 5)
+				mlx_pixel_put(c3d->mlx, c3d->win, i++, c3d->file->ry - j - c3d->file->ry * 0.06, 0x202020);
+		i = pad - 5;
+		while (i < max + pad + 5)
+				mlx_pixel_put(c3d->mlx, c3d->win, i++, c3d->file->ry - j - c3d->file->ry * 0.04 + 5, 0x202020);
+		j++;
+	}
+	j = 0;
+	while (j < c3d->file->ry * 0.02)
+	{
+		i = pad - 5;
+		while (i <  pad)
+				mlx_pixel_put(c3d->mlx, c3d->win, i++, c3d->file->ry - j - c3d->file->ry * 0.04, 0x202020);
+		i = max + pad;
+		while (i < max + pad + 5)
+				mlx_pixel_put(c3d->mlx, c3d->win, i++, c3d->file->ry - j - c3d->file->ry * 0.04, 0x202020);
+		j++;
+	}
+}
+
+void	drawlife(t_win *c3d)
+{
+	int i;
+	int j = 0;
+	int pad = (c3d->file->rx * 0.4);
+	int max = c3d->file->rx - pad * 2;
+	int pix = max * c3d->player->life / 100;
+
+	if (c3d->player->life <= 0)
+		fail_close(c3d, "YOU DED");
+	while (j < c3d->file->ry * 0.02)
+	{
+		i = pad;
+		while (i < max + pad)
+		{
+				mlx_pixel_put(c3d->mlx, c3d->win, i, c3d->file->ry - j - c3d->file->ry * 0.04, 0xFF5555);
+				i++;
+		}
+		i = pad;
+		while (i < pix + pad)
+		{
+				mlx_pixel_put(c3d->mlx, c3d->win, i, c3d->file->ry - j - c3d->file->ry * 0.04, 0x55FF55);
+				i++;
+		}
+		j++;
+	}
+	drawlifecont(c3d, pad);
 }
 
 int		keyhandle(t_win *c3d)
@@ -230,33 +231,43 @@ int		keyhandle(t_win *c3d)
 	i = -30;
 	j = 0;
 	horiz = 1;
-	if (c3d->up || c3d->right || c3d->left || c3d->down || c3d->sleft || c3d->sright)
+	if (c3d->up || c3d->right || c3d->left || c3d->down || c3d->sleft || c3d->sright || c3d->first)
 	{
+		c3d->first = 0;
+		if (c3d->file->map[(int)(c3d->player->y / 64)][(int)(c3d->player->x / 64)] == 2)
+			c3d->player->life--;
 		if (c3d->left)
 			c3d->player->look -= 3;
 		if (c3d->right)
 			c3d->player->look += 3;
-		if (c3d->up && c3d->file->map[(int)(c3d->player->y + 10 * sin(PI*c3d->player->look/180))/64][(int)(c3d->player->x + 10 * cos(PI*c3d->player->look/180))/64] != 1)
+		if (c3d->up)
 		{
-			c3d->player->x += 5 * cos(PI*c3d->player->look/180);
-			c3d->player->y += 5 * sin(PI*c3d->player->look/180);
+			if (c3d->file->map[(int)(c3d->player->y) / 64][(int)(c3d->player->x + 10 * cos(PI*c3d->player->look / 180)) / 64] != 1)
+				c3d->player->x += 5 * cos(PI*c3d->player->look/180);
+			if (c3d->file->map[(int)(c3d->player->y + 10 * sin(PI*c3d->player->look/180))/64][(int)(c3d->player->x)/64] != 1)
+				c3d->player->y += 5 * sin(PI*c3d->player->look/180);
 		}
-		if (c3d->down && c3d->file->map[(int)(c3d->player->y - 10 * sin(PI*c3d->player->look/180))/64][(int)(c3d->player->x - 10 * cos(PI*c3d->player->look/180))/64] != 1)
+		if (c3d->down)
 		{
-			c3d->player->x -= 5 * cos(PI*c3d->player->look/180);
-			c3d->player->y -= 5 * sin(PI*c3d->player->look/180);
+			if (c3d->file->map[(int)(c3d->player->y)/64][(int)(c3d->player->x - 10 * cos(PI*c3d->player->look/180))/64] != 1)
+				c3d->player->x -= 5 * cos(PI*c3d->player->look/180);
+			if (c3d->file->map[(int)(c3d->player->y - 10 * sin(PI*c3d->player->look/180))/64][(int)(c3d->player->x)/64] != 1)
+				c3d->player->y -= 5 * sin(PI*c3d->player->look/180);
 		}
-		if (c3d->sleft && c3d->file->map[(int)(c3d->player->y + 5 * sin(PI*(c3d->player->look-90)/180))/64][(int)(c3d->player->x + 5 * cos(PI*(c3d->player->look-90)/180))/64] != 1)
+		if (c3d->sleft)
 		{
-			c3d->player->x += 2 * cos(PI*(c3d->player->look - 90)/180);
-			c3d->player->y += 2 * sin(PI*(c3d->player->look - 90)/180);
+			if (c3d->file->map[(int)(c3d->player->y)/64][(int)(c3d->player->x + 5 * cos(PI*(c3d->player->look-90)/180))/64] != 1)
+				c3d->player->x += 2 * cos(PI*(c3d->player->look - 90)/180);
+			if (c3d->file->map[(int)(c3d->player->y + 5 * sin(PI*(c3d->player->look-90)/180))/64][(int)(c3d->player->x)/64] != 1)
+				c3d->player->y += 2 * sin(PI*(c3d->player->look - 90)/180);
 		}
-		if (c3d->sright && c3d->file->map[(int)(c3d->player->y - 5 * sin(PI*(c3d->player->look-90)/180))/64][(int)(c3d->player->x - 5 * cos(PI*(c3d->player->look-90)/180))/64] != 1)
+		if (c3d->sright)
 		{
-			c3d->player->x -= 2 * cos(PI*(c3d->player->look - 90)/180);
-			c3d->player->y -= 2 * sin(PI*(c3d->player->look - 90)/180);
+			if (c3d->file->map[(int)(c3d->player->y)/64][(int)(c3d->player->x - 5 * cos(PI*(c3d->player->look-90)/180))/64] != 1)
+				c3d->player->x -= 2 * cos(PI*(c3d->player->look - 90)/180);
+			if (c3d->file->map[(int)(c3d->player->y - 5 * sin(PI*(c3d->player->look-90)/180))/64][(int)(c3d->player->x)/64] != 1)
+				c3d->player->y -= 2 * sin(PI*(c3d->player->look - 90)/180);
 		}
-		mlx_clear_window(c3d->mlx, c3d->win);
 		while (i < 30)
 		{
 			len = line2(c3d, c3d->player->x, c3d->player->y, c3d->player->look + i);
@@ -272,10 +283,15 @@ int		keyhandle(t_win *c3d)
 				horiz = 1;
 			if (j < c3d->file->rx && j >= 0)
 				raycast(c3d, len * cos (PI * i /180), j, horiz);
+			// line(c3d, c3d->player->x / 64 * 30, c3d->player->y / 64 * 30, c3d->player->impx / 64 * 30, c3d->player->impy / 64 * 30, horiz);
 			i+=(60/(float)c3d->file->rx);
 			j++;
 		}
+		mlx_clear_window(c3d->mlx, c3d->win);
 		mlx_put_image_to_window(c3d->mlx, c3d->win, c3d->img, 0, 0);
+		ft_putnbr(c3d->player->look);
+		// drawmap(c3d);
+		drawlife(c3d);
 	}
 	return (0);
 }
@@ -318,6 +334,14 @@ int		hook_keypress(int key, t_win *c3d)
 		c3d->sright = 1;
 	if (key == 53)
 		hook_close(c3d);
+	if (key == KEY_X)
+	{
+		c3d->first = 1;
+		if (c3d->shadow)
+			c3d->shadow = 0;
+		else
+			c3d->shadow = 1;
+	}
 	return (0);
 }
 
@@ -345,12 +369,15 @@ void	c3d_init(t_win *c3d)
 	c3d->player = NULL;
 	if (!(c3d->player = malloc(sizeof(t_pl))))
 		fail_close(c3d, "Player struct malloc failed");
+	c3d->first = 1;
+	c3d->shadow = 0;
 	c3d->up = 0;
 	c3d->down = 0;
 	c3d->left = 0;
 	c3d->right = 0;
 	c3d->sright = 0;
 	c3d->sleft = 0;
+	c3d->player->life = 100;
 	c3d->player->x = (c3d->file->plx * WALLWD - WALLWD/2);
 	c3d->player->y = (c3d->file->ply * WALLWD - WALLWD/2);
 	if (c3d->file->pl == 'N')
@@ -368,26 +395,30 @@ void	c3d_init(t_win *c3d)
 void	ft_img_loader(t_win *c3d)
 {
 	int na;
+	int bpp;
+	int endian;
 	void *imgld;
 
 	c3d->img = mlx_new_image(c3d->mlx, c3d->file->rx, c3d->file->ry);
-	c3d->imgbuf = (int *)mlx_get_data_addr(c3d->img, &na, &na, &na);
+	c3d->imgbuf = (int *)mlx_get_data_addr(c3d->img, &bpp, &na, &endian);
+
 	if (!(imgld = mlx_xpm_file_to_image(c3d->mlx, c3d->file->no, &c3d->wall_w[0], &c3d->wall_h[0])))
 		fail_close(c3d, "North texture not found");
-	c3d->wall[0] = mlx_get_data_addr(imgld, &na, &na, &na);
+	c3d->wall[0] = (int *)mlx_get_data_addr(imgld, &bpp, &na, &endian);
+
 	if (!(imgld = mlx_xpm_file_to_image(c3d->mlx, c3d->file->so, &c3d->wall_w[1], &c3d->wall_h[1])))
 		fail_close(c3d, "South texture not found");
-	c3d->wall[1] = mlx_get_data_addr(imgld, &na, &na, &na);
+	c3d->wall[1] = (int *)mlx_get_data_addr(imgld, &bpp, &na, &endian);
 	if (!(imgld = mlx_xpm_file_to_image(c3d->mlx, c3d->file->we, &c3d->wall_w[2], &c3d->wall_h[2])))
 		fail_close(c3d, "West texture not found");
-	c3d->wall[2] = mlx_get_data_addr(imgld, &na, &na, &na);
+	c3d->wall[2] = (int *)mlx_get_data_addr(imgld, &bpp, &na, &endian);
 	if (!(imgld = mlx_xpm_file_to_image(c3d->mlx, c3d->file->ea, &c3d->wall_w[3], &c3d->wall_h[3])))
 		fail_close(c3d, "East texture not found");
-	c3d->wall[3] = mlx_get_data_addr(imgld, &na, &na, &na);
+	c3d->wall[3] = (int *)mlx_get_data_addr(imgld, &bpp, &na, &endian);
 
 	if (!(imgld = mlx_xpm_file_to_image(c3d->mlx, c3d->file->s, &c3d->sp_w, &c3d->sp_h)))
 		fail_close(c3d, "Sprite texture not found");
-	c3d->sp = mlx_get_data_addr(imgld, &na, &na, &na);
+	c3d->sp = (int *)mlx_get_data_addr(imgld, &bpp, &na, &endian);
 }
 
 int		main(int ac, char **av)
@@ -455,13 +486,13 @@ int		main(int ac, char **av)
 			else
 				horiz = 1;
 			if (j < c3d->file->rx && j >= 0)
-				raycast(c3d, len * cos (PI * i /180), j, horiz);
-			i+=(60/(float)c3d->file->rx);
+				raycast(c3d, len * cos(PI * i / 180), j, horiz);
+			i += (60 / (float)c3d->file->rx);
 			j++;
 		}
 
 		int fd;
-		fd = open("output.bmp", O_WRONLY|O_CREAT|O_TRUNC);
+		fd = open("output.bmp", O_WRONLY | O_CREAT | O_TRUNC);
 		ft_write_header(c3d, fd);
 		ft_mirror_img(c3d, fd);
 

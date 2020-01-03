@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/10 17:07:44 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/12/24 16:06:27 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/03 15:03:20 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -25,6 +25,8 @@
 # define DOWN 125
 # define WALLWD 64
 
+# define KEY_X 7
+
 # define SLEFT 0
 # define SRIGHT 2
 
@@ -32,19 +34,20 @@
 
 typedef struct	s_pl
 {
+	int		life;
 	float	x;
 	float	y;
 	float	look;
 
-	float		spx;
-	float		spy;
-	float		splen;
+	float	spx;
+	float	spy;
+	float	splen;
 
-	float		impx;
-	float		impy;
+	float	impx;
+	float	impy;
 
-	float		impx2;
-	float		impy2;
+	float	impx2;
+	float	impy2;
 }				t_pl;
 
 typedef struct	s_file
@@ -81,9 +84,12 @@ typedef struct	s_win
 	void	*mlx;
 	void	*win;
 	void	*img;
-	int	*imgbuf;
+	int		*imgbuf;
 	t_pl	*player;
-	t_file *file;
+	t_file	*file;
+	int		first;
+
+	int		shadow;
 
 	int		up;
 	int		down;
@@ -93,11 +99,11 @@ typedef struct	s_win
 	int		sleft;
 	int		sright;
 
-	char	*wall[4];
+	int		*wall[4];
 	int		wall_w[4];
 	int		wall_h[4];
 
-	char	*sp;
+	int		*sp;
 	int		sp_h;
 	int		sp_w;
 }				t_win;
@@ -119,5 +125,17 @@ void			ft_checkfc(t_file *file, char *line);
 void			c3d_init(t_win *c3d);
 void			ft_write_header(t_win *c3d, int fd);
 void			ft_mirror_img(t_win *c3d, int fd);
+void			fail_close(t_win *c3d, char *s);
+void			ft_draw_ceil(t_win *c3d, float shift, int j);
+void			ft_draw_floor(t_win *c3d, float shift, int j, int len);
+void			ft_draw_wall(t_win *c3d, float len, int j, int horiz);
+int				rgbtohex(int r, int g, int b);
+void			rgb_shadow(int *r, int *g, int *b, float shade);
+int				rgb_shadow_wall(int color, float len);
+
+
+void	npix(t_win *c3d, int size, int x, int y);
+void line(t_win *c3d, int x0, int y0, int x1, int y1, int color);
+void	drawmap(t_win *c3d);
 
 #endif
