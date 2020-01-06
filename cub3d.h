@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/10 17:07:44 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/03 15:03:20 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/06 17:00:34 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -132,7 +132,8 @@ void			ft_draw_wall(t_win *c3d, float len, int j, int horiz);
 int				rgbtohex(int r, int g, int b);
 void			rgb_shadow(int *r, int *g, int *b, float shade);
 int				rgb_shadow_wall(int color, float len);
-
+int				get_texnum(t_win *c3d, int horiz);
+int				get_tex_uvmap(t_win *c3d, int tex);
 
 void	npix(t_win *c3d, int size, int x, int y);
 void line(t_win *c3d, int x0, int y0, int x1, int y1, int color);

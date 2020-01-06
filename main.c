@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/11/29 12:13:52 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/03 16:52:10 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/06 17:10:35 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -33,33 +33,78 @@ void raycast(t_win *c3d, float len, int j, int horiz)
 	ft_draw_floor(c3d, shift, j, len);
 
 
+	float cal = 0;
+	float spx = 64 * 5 + 32;
+	float spy = 64 * 5 + 32;
+
+
+	float dx = fabs(c3d->player->x - spx);
+	float dy = fabs(c3d->player->y - spy);
+
+	if (c3d->player->x < spx && c3d->player->y >= spy)
+		cal = atan(dy/dx) * 180 / PI;
+	else if (c3d->player->x >= spx && c3d->player->y >= spy)
+		cal = 180 - (atan(dy/dx) * 180 / PI);
+	else if (c3d->player->x >= spx && c3d->player->y < spy)
+		cal = 270 - (atan(dx/dy) * 180 / PI);
+	else if (c3d->player->x < spx && c3d->player->y < spy)
+		cal = 270 + (atan(dx/dy) * 180 / PI);
+
+
+	// if (cal >= c3d->player->look-30%360 && cal <= c3d->player->look+30%360)
 	/* SPRITE */
 	int o;
 	int i;
 	float rest;
 	float test;
-	// if (c3d->player->look > 180 && c3d->player->look < 360)
-	// {
-		len = WALLWD/(sqrt(pow(c3d->player->x - 64 * 27, 2) + pow(c3d->player->y - 64 * 3, 2))) * ((c3d->file->rx/2) * tan(PI * 60 / 180));
+
+	float dist = sqrt(pow(c3d->player->x - spx, 2) + pow(c3d->player->y - spy, 2));
+	float len2 = WALLWD/dist * ((c3d->file->rx/2) * tan(PI * 60 / 180));
+	if (len < len2)
+	{
 		o = 0;
-		shift = c3d->file->ry/2 - len/2;
+		shift = c3d->file->ry/2 - len2/2;
 		i = shift;
-		int pos = c3d->file->rx + (c3d->player->x - 64 * 27);
-		float i2 = pos/2 - len/2;
+		float angle = -5;
+		angle = (360 - cal) - (c3d->player->look - 30);
+		while (angle < 0)
+			angle += 360;
+		while (angle >= 360)
+			angle -= 360;
+		float pos = angle * c3d->file->rx * 2 / 60;
+		if (j == 1000)
+		{
+			ft_putnbr(angle);
+			ft_putstr("\n");
+		}
+		float i2 = pos/2 - len2/2;
 		if (j > i2 && j < pos - i2)
 			while(i < c3d->file->ry + shift + o && i < c3d->file->ry)
 			{
-				if (i >= 0 && i < (c3d->file->ry/2 - len/2) + len - 1)
+				if (i >= 0 && i < (c3d->file->ry/2 - len2/2) + len2 - 1)
 				{
-						test = c3d->sp_w * (int)((o/(len/c3d->sp_w)));
-						rest = (int)((j - i2)/(len/c3d->sp_h))%64;
+					test = c3d->sp_w * (int)((o/(len2/c3d->sp_w)));
+					rest = (int)((j - i2)/(len2/c3d->sp_h))%64;
+					if (i * c3d->file->rx + j < c3d->file->ry * c3d->file->rx + c3d->file->rx && c3d->sp[(int)(test + rest)])
+						c3d->imgbuf[i * c3d->file->rx + j] = c3d->sp[(int)(test + rest)];
+				}
+				i++;
+				o++;
+			}
+		if (j > i2 && j < pos - i2)
+			while(i < c3d->file->ry + shift + o && i < c3d->file->ry)
+			{
+				if (i >= 0 && i < (c3d->file->ry/2 - len2/2) + len2 - 1)
+				{
+						test = c3d->sp_w * (int)((o/(len2/c3d->sp_w)));
+						rest = (int)((j - i2)/(len2/c3d->sp_h))%64;
 						if (i * c3d->file->rx + j < c3d->file->ry * c3d->file->rx + c3d->file->rx && c3d->sp[(int)(test + rest)])
 							c3d->imgbuf[i * c3d->file->rx + j] = c3d->sp[(int)(test + rest)];
 				}
 				i++;
 				o++;
 			}
-	// }
+		}
 }
 
 
@@ -289,7 +334,29 @@ int		keyhandle(t_win *c3d)
 		}
 		mlx_clear_window(c3d->mlx, c3d->win);
 		mlx_put_image_to_window(c3d->mlx, c3d->win, c3d->img, 0, 0);
-		ft_putnbr(c3d->player->look);
+
+
+		// ft_putnbr((int)(c3d->player->look-30)%360);
+		// ft_putstr(" - ");
+		// ft_putnbr((int)(c3d->player->look+30)%360);
+		// ft_putstr(" ");
+		// float dx = c3d->player->x - 64 * 27 + 32;
+		// float dy = c3d->player->y - 64 * 3 + 32;
+		//
+		// float cal = 0;
+		// if (dx >= 0 && dy >= 0)
+		// 	cal = fabs(atan(dx/dy) * 180 / PI) + 270;
+		// else if (dx < 0 && dy >= 0)
+		// 	cal = fabs(atan(dy/dx) * 180 / PI) + 180;
+		// else if (dx >= 0 && dy < 0)
+		// 	cal = fabs(atan(dy/dx) * 180 / PI);
+		// else if (dx < 0 && dy < 0)
+		// 	cal = fabs(atan(dx/dy) * 180 / PI) + 90;
+		//
+		//
+		// if (cal >= c3d->player->look-30%360 && cal <= c3d->player->look+30%360)
+		// 	ft_putnbr(cal);
+		// ft_putstr("\n");
 		// drawmap(c3d);
 		drawlife(c3d);
 	}
