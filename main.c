@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/11/29 12:13:52 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/06 17:10:35 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/07 16:14:52 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,95 +18,25 @@
 
 void raycast(t_win *c3d, float len, int j, int horiz)
 {
+	t_sp *sp;
 	float shift;
 
 	len = WALLWD / len * ((c3d->file->rx/2) * tan(PI * 60 / 180));
 	shift = c3d->file->ry/2 - len/2;
 
-	/* CEIL */
 	ft_draw_ceil(c3d, shift, j);
-
-	/* WALLS */
 	ft_draw_wall(c3d, len, j, horiz);
-
-	/* FLOOR */
 	ft_draw_floor(c3d, shift, j, len);
 
-
-	float cal = 0;
-	float spx = 64 * 5 + 32;
-	float spy = 64 * 5 + 32;
-
-
-	float dx = fabs(c3d->player->x - spx);
-	float dy = fabs(c3d->player->y - spy);
-
-	if (c3d->player->x < spx && c3d->player->y >= spy)
-		cal = atan(dy/dx) * 180 / PI;
-	else if (c3d->player->x >= spx && c3d->player->y >= spy)
-		cal = 180 - (atan(dy/dx) * 180 / PI);
-	else if (c3d->player->x >= spx && c3d->player->y < spy)
-		cal = 270 - (atan(dx/dy) * 180 / PI);
-	else if (c3d->player->x < spx && c3d->player->y < spy)
-		cal = 270 + (atan(dx/dy) * 180 / PI);
-
-
-	// if (cal >= c3d->player->look-30%360 && cal <= c3d->player->look+30%360)
-	/* SPRITE */
-	int o;
-	int i;
-	float rest;
-	float test;
-
-	float dist = sqrt(pow(c3d->player->x - spx, 2) + pow(c3d->player->y - spy, 2));
-	float len2 = WALLWD/dist * ((c3d->file->rx/2) * tan(PI * 60 / 180));
-	if (len < len2)
-	{
-		o = 0;
-		shift = c3d->file->ry/2 - len2/2;
-		i = shift;
-		float angle = -5;
-		angle = (360 - cal) - (c3d->player->look - 30);
-		while (angle < 0)
-			angle += 360;
-		while (angle >= 360)
-			angle -= 360;
-		float pos = angle * c3d->file->rx * 2 / 60;
-		if (j == 1000)
+	sp_sort(c3d->spp, c3d);
+	sp = c3d->spp;
+	if (sp)
+		while (sp->next)
 		{
-			ft_putnbr(angle);
-			ft_putstr("\n");
-		}
-		float i2 = pos/2 - len2/2;
-		if (j > i2 && j < pos - i2)
-			while(i < c3d->file->ry + shift + o && i < c3d->file->ry)
-			{
-				if (i >= 0 && i < (c3d->file->ry/2 - len2/2) + len2 - 1)
-				{
-					test = c3d->sp_w * (int)((o/(len2/c3d->sp_w)));
-					rest = (int)((j - i2)/(len2/c3d->sp_h))%64;
-					if (i * c3d->file->rx + j < c3d->file->ry * c3d->file->rx + c3d->file->rx && c3d->sp[(int)(test + rest)])
-						c3d->imgbuf[i * c3d->file->rx + j] = c3d->sp[(int)(test + rest)];
-				}
-				i++;
-				o++;
-			}
-		if (j > i2 && j < pos - i2)
-			while(i < c3d->file->ry + shift + o && i < c3d->file->ry)
-			{
-				if (i >= 0 && i < (c3d->file->ry/2 - len2/2) + len2 - 1)
-				{
-						test = c3d->sp_w * (int)((o/(len2/c3d->sp_w)));
-						rest = (int)((j - i2)/(len2/c3d->sp_h))%64;
-						if (i * c3d->file->rx + j < c3d->file->ry * c3d->file->rx + c3d->file->rx && c3d->sp[(int)(test + rest)])
-							c3d->imgbuf[i * c3d->file->rx + j] = c3d->sp[(int)(test + rest)];
-				}
-				i++;
-				o++;
-			}
+			ft_draw_sp(c3d, len, j, sp);
+			sp = sp->next;
 		}
 }
-
 
 float line2(t_win *c3d, float x0, float y0, float ang)
 {
@@ -313,6 +243,7 @@ int		keyhandle(t_win *c3d)
 			if (c3d->file->map[(int)(c3d->player->y - 5 * sin(PI*(c3d->player->look-90)/180))/64][(int)(c3d->player->x)/64] != 1)
 				c3d->player->y -= 2 * sin(PI*(c3d->player->look - 90)/180);
 		}
+		sp_getdist(c3d, c3d->spp);
 		while (i < 30)
 		{
 			len = line2(c3d, c3d->player->x, c3d->player->y, c3d->player->look + i);
@@ -510,6 +441,9 @@ int		main(int ac, char **av)
 	 		fail_close(c3d, "Mlx init failed");
 
 		ft_img_loader(c3d);
+		ft_sprite_handler(c3d);
+		sp_getdist(c3d, c3d->spp);
+		sp_sort(c3d->spp, c3d);
 
 	 	mlx_hook(c3d->win, 17, 0, hook_close, c3d);
 	 	mlx_hook(c3d->win, 2, 0, hook_keypress, c3d);

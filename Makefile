@@ -21,7 +21,9 @@ SRC =	main.c \
 			ft_save.c \
 			ft_draw.c \
 			ft_color.c \
-			debug.c
+			ft_sprite.c \
+			ft_sprite_list.c \
+			debug.c \
 
 OBJ		=	$(SRC:%.c=%.o)
 
@@ -39,7 +41,7 @@ $(NAME): $(OBJ) $(LIBFT) $(MINILIBX)
 	@echo "${DONE}Making libcub3d.a${NC}"
 	@cp libft/libft.a $(NAME)
 	@ar rcs $(NAME) $(OBJ)
-	gcc -Wall -Werror -Wextra -O3 main.c minilibx_macos/libmlx.a -L. -lcub3d -framework OpenGL -framework AppKit -o cub3d
+	gcc -g3 -Wall -Werror -Wextra -O3 main.c minilibx_macos/libmlx.a -L. -lcub3d -framework OpenGL -framework AppKit -o cub3d
 
 %.o: %.c libftprintf.h libft/libft.h
 	@$(CC) -o $@ -c $<

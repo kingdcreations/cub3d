@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/10 17:07:44 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/06 17:00:34 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/07 15:33:22 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -79,6 +79,15 @@ typedef struct	s_file
 	int		maph;
 }				t_file;
 
+typedef struct	s_sp
+{
+	float	spx;
+	float	spy;
+	float	dist;
+	float	angle;
+	struct	s_sp *next;
+}				t_sp;
+
 typedef struct	s_win
 {
 	void	*mlx;
@@ -106,6 +115,8 @@ typedef struct	s_win
 	int		*sp;
 	int		sp_h;
 	int		sp_w;
+	int		sp_nb;
+	t_sp	*spp;
 }				t_win;
 
 void			ft_parsefile(t_file *file, char *filename);
@@ -134,6 +145,11 @@ void			rgb_shadow(int *r, int *g, int *b, float shade);
 int				rgb_shadow_wall(int color, float len);
 int				get_texnum(t_win *c3d, int horiz);
 int				get_tex_uvmap(t_win *c3d, int tex);
+void		ft_sprite_handler(t_win *c3d);
+void		ft_draw_sp(t_win *c3d, float len, int j, t_sp *sp);
+void		sp_getdist(t_win *c3d, t_sp *spp);
+float	sp_getangle(float angle, float look);
+void	sp_sort(t_sp *sp, t_win *c3d);
 
 void	npix(t_win *c3d, int size, int x, int y);
 void line(t_win *c3d, int x0, int y0, int x1, int y1, int color);

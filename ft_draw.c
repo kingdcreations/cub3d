@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/03 10:32:47 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/06 17:00:12 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/07 18:10:37 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -52,7 +52,7 @@ void	ft_draw_floor(t_win *c3d, float shift, int j, int len)
 		r = c3d->file->f[0];
 		g = c3d->file->f[1];
 		b = c3d->file->f[2];
-		coef = (i - c3d->file->ry/4) / (c3d->file->ry * 0.7);
+		coef = (i - c3d->file->ry / 4) / (c3d->file->ry * 0.7);
 		if (c3d->shadow)
 			rgb_shadow(&r, &g, &b, coef);
 		if (j >= 0 && j < c3d->file->rx && i >= 0 && i < c3d->file->ry)
@@ -87,5 +87,33 @@ void	ft_draw_wall(t_win *c3d, float len, int j, int horiz)
 		}
 		i++;
 		o++;
+	}
+}
+
+void	ft_draw_sp(t_win *c3d, float len, int j, t_sp *sp)
+{
+	int		o;
+	int		i;
+	int		uv;
+	float	len2;
+	float	i2;
+
+	len2 = WALLWD / sp->dist * ((c3d->file->rx / 2) * tan(PI * 60 / 180));
+	if (len < len2)
+	{
+		o = -1;
+		i = (c3d->file->ry / 2 - len2 / 2) - 1;
+		len = sp_getangle(sp->angle, c3d->player->look) * (c3d->file->rx * 2) / 60;
+		i2 = len / 2 - len2 / 2;
+		if (j > i2 && j < len - i2)
+			while (++i < c3d->file->ry + (c3d->file->ry / 2 - len2 / 2) + (++o)
+			&& i < c3d->file->ry)
+				if (i >= 0 && i < (c3d->file->ry / 2 - len2 / 2) + len2 - 1)
+				{
+					uv = c3d->sp_w * (int)((o / (len2 / c3d->sp_w)));
+					uv = uv + (int)((j - i2) / (len2 / c3d->sp_h)) % 64;
+					if (c3d->sp[uv])
+						c3d->imgbuf[i * c3d->file->rx + j] = c3d->sp[uv];
+				}
 	}
 }
