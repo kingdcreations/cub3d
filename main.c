@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/11/29 12:13:52 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/07 16:14:52 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/08 16:55:22 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -22,7 +22,7 @@ void raycast(t_win *c3d, float len, int j, int horiz)
 	float shift;
 
 	len = WALLWD / len * ((c3d->file->rx/2) * tan(PI * 60 / 180));
-	shift = c3d->file->ry/2 - len/2;
+	shift = c3d->file->ry/c3d->player->view - len/c3d->player->crch;
 
 	ft_draw_ceil(c3d, shift, j);
 	ft_draw_wall(c3d, len, j, horiz);
@@ -265,29 +265,6 @@ int		keyhandle(t_win *c3d)
 		}
 		mlx_clear_window(c3d->mlx, c3d->win);
 		mlx_put_image_to_window(c3d->mlx, c3d->win, c3d->img, 0, 0);
-
-
-		// ft_putnbr((int)(c3d->player->look-30)%360);
-		// ft_putstr(" - ");
-		// ft_putnbr((int)(c3d->player->look+30)%360);
-		// ft_putstr(" ");
-		// float dx = c3d->player->x - 64 * 27 + 32;
-		// float dy = c3d->player->y - 64 * 3 + 32;
-		//
-		// float cal = 0;
-		// if (dx >= 0 && dy >= 0)
-		// 	cal = fabs(atan(dx/dy) * 180 / PI) + 270;
-		// else if (dx < 0 && dy >= 0)
-		// 	cal = fabs(atan(dy/dx) * 180 / PI) + 180;
-		// else if (dx >= 0 && dy < 0)
-		// 	cal = fabs(atan(dy/dx) * 180 / PI);
-		// else if (dx < 0 && dy < 0)
-		// 	cal = fabs(atan(dx/dy) * 180 / PI) + 90;
-		//
-		//
-		// if (cal >= c3d->player->look-30%360 && cal <= c3d->player->look+30%360)
-		// 	ft_putnbr(cal);
-		// ft_putstr("\n");
 		// drawmap(c3d);
 		drawlife(c3d);
 	}
@@ -330,16 +307,18 @@ int		hook_keypress(int key, t_win *c3d)
 		c3d->sleft = 1;
 	if (key == SRIGHT)
 		c3d->sright = 1;
+	if (key == KEY_C)
+		c3d->player->crch = 1.4;
 	if (key == 53)
 		hook_close(c3d);
 	if (key == KEY_X)
 	{
-		c3d->first = 1;
 		if (c3d->shadow)
 			c3d->shadow = 0;
 		else
 			c3d->shadow = 1;
 	}
+	c3d->first = 1;
 	return (0);
 }
 
@@ -357,6 +336,9 @@ int		hook_keyrelease(int key, t_win *c3d)
 		c3d->sleft = 0;
 	if (key == SRIGHT)
 		c3d->sright = 0;
+	if (key == KEY_C)
+		c3d->player->crch = 2;
+	c3d->first = 1;
 	return (0);
 }
 
@@ -419,6 +401,20 @@ void	ft_img_loader(t_win *c3d)
 	c3d->sp = (int *)mlx_get_data_addr(imgld, &bpp, &na, &endian);
 }
 
+int hook_motion(int x, int y, t_win *c3d)
+{
+	x += c3d->file->rx/2;
+	c3d->player->look -= (c3d->player->oldx - x)/2;
+	c3d->player->oldx = x;
+	c3d->player->view = 2;
+	if (y > 2*c3d->file->ry/3)
+		c3d->player->view = 3;
+	else if (y < c3d->file->ry/3)
+		c3d->player->view = 1.5;
+	c3d->first = 1;
+	return (0);
+}
+
 int		main(int ac, char **av)
 {
 	t_win		*c3d;
@@ -440,12 +436,16 @@ int		main(int ac, char **av)
 	 	|| !(c3d->win = mlx_new_window(c3d->mlx, file->rx, file->ry, "cub3d")))
 	 		fail_close(c3d, "Mlx init failed");
 
+		c3d->player->view = 2;
+		c3d->player->oldx = c3d->file->rx/2;
+		c3d->player->crch = 2;
 		ft_img_loader(c3d);
 		ft_sprite_handler(c3d);
 		sp_getdist(c3d, c3d->spp);
 		sp_sort(c3d->spp, c3d);
 
-	 	mlx_hook(c3d->win, 17, 0, hook_close, c3d);
+		mlx_hook(c3d->win, 17, 0, hook_close, c3d);
+	 	// mlx_hook(c3d->win, 6, 0, hook_motion, c3d);
 	 	mlx_hook(c3d->win, 2, 0, hook_keypress, c3d);
 	 	mlx_hook(c3d->win, 3, 0, hook_keyrelease, c3d);
 	 	mlx_loop_hook(c3d->mlx, keyhandle, c3d);

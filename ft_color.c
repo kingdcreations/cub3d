@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/03 12:45:15 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/06 17:00:20 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/08 17:43:19 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -78,14 +78,14 @@ int		get_tex_uvmap(t_win *c3d, int tex)
 
 	texy = 0;
 	if (tex == 0)
-		texy = c3d->wall_h[0] - c3d->player->impx / (WALLWD / c3d->wall_h[0]);
+		texy = c3d->wall_w[0] - c3d->player->impx / 64 * c3d->wall_w[0];
 	else if (tex == 1)
-		texy = c3d->player->impx / (WALLWD / c3d->wall_h[1]);
+		texy = c3d->player->impx / 64 * c3d->wall_w[1];
 	else if (tex == 2)
-		texy = c3d->player->impy / (WALLWD / c3d->wall_h[2]);
+		texy = c3d->player->impy / 64 * c3d->wall_w[2];
 	else if (tex == 3)
-		texy = c3d->wall_h[3] - c3d->player->impy / (WALLWD / c3d->wall_h[3]);
-	texy = texy % c3d->wall_h[tex];
+		texy = c3d->wall_w[3] - (c3d->player->impy / 64 * c3d->wall_w[3]);
+	texy = texy % c3d->wall_w[tex];
 	if (tex == 0 || tex == 3)
 		texy--;
 	return (texy);

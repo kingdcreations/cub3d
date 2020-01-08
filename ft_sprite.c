@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/07 09:37:35 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/07 18:06:28 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/08 12:26:47 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -83,7 +83,7 @@ void	sp_getdist(t_win *c3d, t_sp *spp)
 
 float	sp_getangle(float angle, float look)
 {
-	angle = (360 - angle) - (look - 30);
+	angle = (360 - angle) - (look - 60);
 	while (angle < 0)
 		angle += 360;
 	while (angle >= 360)

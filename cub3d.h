@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/10 17:07:44 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/07 15:33:22 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/08 15:44:22 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -26,6 +26,7 @@
 # define WALLWD 64
 
 # define KEY_X 7
+# define KEY_C 8
 
 # define SLEFT 0
 # define SRIGHT 2
@@ -48,6 +49,10 @@ typedef struct	s_pl
 
 	float	impx2;
 	float	impy2;
+
+	int oldx;
+	float crch;
+	float view;
 }				t_pl;
 
 typedef struct	s_file
