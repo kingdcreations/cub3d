@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/12 14:28:46 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/12/16 15:31:34 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/09 10:51:47 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -54,7 +54,8 @@ int		get_file(t_file *file, char *name)
 	fd = open(name, O_RDONLY);
 	while (res)
 	{
-		res = get_next_line(fd, &line, file);
+		if ((res = get_next_line(fd, &line, file)) == -1)
+			ft_error(file, "File not found.", 0);
 		file->line = line;
 		if (line[0] == 'R' || line[0] == 'S' || !line[0]
 		|| !(ft_strncmp(line, "SO", 2)) || !(ft_strncmp(line, "WE", 2))
@@ -78,4 +79,10 @@ void	ft_parsefile(t_file *file, char *filename)
 	get_file(file, filename);
 	parsemap(file);
 	ft_checkerror(file);
+	if (!file->pl)
+		ft_error(file, "Player not found.", file->maph);
+	if (file->rx > 2560)
+		file->rx = 2560;
+	if (file->ry > 1440)
+		file->ry = 1440;
 }

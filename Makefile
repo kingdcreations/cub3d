@@ -23,6 +23,10 @@ SRC =	main.c \
 			ft_color.c \
 			ft_sprite.c \
 			ft_sprite_list.c \
+			ft_myhooks.c \
+			ft_bonus.c \
+			ft_keyhandling.c \
+			ft_image.c \
 			debug.c \
 
 OBJ		=	$(SRC:%.c=%.o)

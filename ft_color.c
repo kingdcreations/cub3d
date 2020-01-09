@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/03 12:45:15 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/08 17:43:19 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/09 10:36:07 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -28,7 +28,7 @@ void	rgb_shadow(int *r, int *g, int *b, float shade)
 	*b *= shade;
 }
 
-int		rgb_shadow_wall(int color, float len)
+int		rgb_shadow_wall(int color, float len, t_win *c3d)
 {
 	int		r;
 	int		g;
@@ -39,12 +39,15 @@ int		rgb_shadow_wall(int color, float len)
 	g = (color >> 8) & 0xFF;
 	b = color & 0xFF;
 	dark = len / 100 * 0.95;
-	if (r * dark < r)
-		r = r * dark;
-	if (g * dark < g)
-		g = g * dark;
-	if (b * dark < b)
-		b = b * dark;
+	if (c3d->shadow)
+	{
+		if (r * dark < r)
+			r = r * dark;
+		if (g * dark < g)
+			g = g * dark;
+		if (b * dark < b)
+			b = b * dark;
+	}
 	return (rgbtohex(r, g, b));
 }
 

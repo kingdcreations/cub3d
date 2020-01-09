@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/11/29 12:13:52 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/08 16:55:22 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/09 18:07:52 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,330 +16,84 @@
 #include "minilibx_macos/mlx.h"
 #include "gnl/get_next_line.h"
 
-void raycast(t_win *c3d, float len, int j, int horiz)
+float	ft_repairangle(float angle)
 {
-	t_sp *sp;
-	float shift;
-
-	len = WALLWD / len * ((c3d->file->rx/2) * tan(PI * 60 / 180));
-	shift = c3d->file->ry/c3d->player->view - len/c3d->player->crch;
-
-	ft_draw_ceil(c3d, shift, j);
-	ft_draw_wall(c3d, len, j, horiz);
-	ft_draw_floor(c3d, shift, j, len);
-
-	sp_sort(c3d->spp, c3d);
-	sp = c3d->spp;
-	if (sp)
-		while (sp->next)
-		{
-			ft_draw_sp(c3d, len, j, sp);
-			sp = sp->next;
-		}
-}
-
-float line2(t_win *c3d, float x0, float y0, float ang)
-{
-	float angle = -ang;
-	float Ay;
-	float Ax;
-	float Ya;
-	float Xa;
-	char sidev;
-
+	angle = -angle;
 	while (angle < 0)
 		angle += 360;
 	while (angle >= 360)
 		angle -= 360;
+	return (angle);
+}
 
+float	linex(t_win *c3d, float x0, float y0, float angle)
+{
+	double	ay;
+	float	ax;
+	float	ya;
+	float	xa;
+
+	angle = ft_repairangle(angle);
 	if (angle > 0 && angle < 180)
 	{
-		Ay = floor(y0 / WALLWD) * WALLWD - 1;
-		Ya = -WALLWD;
+		ay = floor(y0 / WALLWD) * WALLWD - 0.00001;
+		ya = -WALLWD;
 	}
 	else
 	{
-		Ay = floor(y0 /WALLWD) * WALLWD + WALLWD;
-		Ya = WALLWD;
+		ay = floor(y0 / WALLWD) * WALLWD + WALLWD;
+		ya = WALLWD;
 	}
 	if (angle != 0 && angle != 180)
 	{
-		Ax = x0 + (y0-Ay) / tan(PI * angle/180);
-		Xa = -Ya/tan(PI * angle/180);
+		ax = x0 + (y0 - ay) / tan(PI * angle / 180);
+		xa = -ya / tan(PI * angle / 180);
 	}
 	else
-		return (c3d->file->mapw*WALLWD);
-	if (c3d->player->x < Ax)
-		sidev = 'E';
-	else
-		sidev = 'W';
-	c3d->player->spx = -1;
-	while ((sidev == 'E' && Ax/WALLWD < c3d->file->mapw && Ay/WALLWD < c3d->file->maph && Ax/WALLWD > 0 && Ay/WALLWD > 0 && c3d->file->map[(int)Ay/WALLWD][(int)(Ax)/WALLWD] != 1)
-	|| (sidev == 'W' && Ax/WALLWD < c3d->file->mapw && Ay/WALLWD < c3d->file->maph && Ax/WALLWD > 0 && Ay/WALLWD > 0 && c3d->file->map[(int)Ay/WALLWD][((int)Ax+1)/WALLWD] != 1))
+		return (c3d->file->mapw * WALLWD);
+	while (ax / WALLWD < c3d->file->mapw && ay / WALLWD < c3d->file->maph && ax / WALLWD > 0 && ay / WALLWD > 0 && c3d->file->map[(int)ay / WALLWD][(int)ax / WALLWD] != 1)
 	{
-		if (c3d->file->map[(int)Ay/WALLWD][((int)Ax+1)/WALLWD] == 2 && c3d->player->spx == -1)
-			c3d->player->spx = 1;
-		Ax+=Xa;
-		Ay+=Ya;
+		ax += xa;
+		ay += ya;
 	}
-	c3d->player->impx = Ax;
-	c3d->player->impy = Ay;
-	return (sqrt(pow(x0 - Ax, 2) + pow(y0 - Ay, 2)));
+	c3d->player->impx = ax;
+	c3d->player->impy = ay;
+	return (sqrt(pow(x0 - ax, 2) + pow(y0 - ay, 2)));
 }
 
-float line3(t_win *c3d, float x0, float y0, float ang)
+float	liney(t_win *c3d, float x0, float y0, float angle)
 {
-	float angle = -ang;
-	float Ya;
-	float Xa;
-	float By;
-	float Bx;
-	char sidev;
+	float	ya;
+	float	xa;
+	float	by;
+	double	bx;
 
-	while (0 > angle)
-		angle += 360;
-	while (angle >= 360)
-		angle -= 360;
-
-//GAUCHE
+	angle = ft_repairangle(angle);
 	if (angle > 90 && angle < 270)
 	{
-		Bx = floor(x0 /WALLWD) * WALLWD - 1;
-		Xa = -WALLWD;
+		bx = floor(x0 / WALLWD) * WALLWD - 0.00001;
+		xa = -WALLWD;
 	}
 	else
 	{
-		Bx = floor(x0 / WALLWD) * WALLWD + WALLWD;
-		Xa = WALLWD;
+		bx = floor(x0 / WALLWD) * WALLWD + WALLWD;
+		xa = WALLWD;
 	}
 	if (angle != 270 && angle != 90)
 	{
-		By = y0 + (x0-Bx) * tan(PI * angle/180);
-		Ya = -Xa * tan(PI * angle/180);
+		by = y0 + (x0 - bx) * tan(PI * angle / 180);
+		ya = -xa * tan(PI * angle / 180);
 	}
 	else
-		return (c3d->file->maph*WALLWD);
-	if (c3d->player->y < By)
-		sidev = 'N';
-	else
-		sidev = 'S';
-	c3d->player->spy = -1;
-	while ((sidev == 'N' && Bx/WALLWD < c3d->file->mapw && By/WALLWD < c3d->file->maph && Bx/WALLWD > 0 && By/WALLWD > 0 && c3d->file->map[(int)By/WALLWD][(int)Bx/WALLWD] != 1)
-	|| (sidev == 'S' && Bx/WALLWD < c3d->file->mapw && By/WALLWD < c3d->file->maph && Bx/WALLWD > 0 && By/WALLWD > 0 && c3d->file->map[((int)By + 1)/WALLWD][(int)Bx/WALLWD] != 1))
+		return (c3d->file->maph * WALLWD);
+	while (bx / WALLWD < c3d->file->mapw && by / WALLWD < c3d->file->maph && bx / WALLWD > 0 && by / WALLWD > 0 && c3d->file->map[(int)by / WALLWD][(int)bx / WALLWD] != 1)
 	{
-		if (c3d->file->map[(int)By/WALLWD][((int)Bx+1)/WALLWD] == 2 && c3d->player->spy == -1)
-			c3d->player->spy = 1;
-		Bx+=Xa;
-		By+=Ya;
+		bx += xa;
+		by += ya;
 	}
-	c3d->player->impx2 = Bx;
-	c3d->player->impy2 = By;
-	return(sqrt(pow(x0 - Bx, 2) + pow(y0 - By, 2)));
-}
-
-void	drawlifecont(t_win *c3d, int pad)
-{
-	int i;
-	int j = 0;
-	int max = c3d->file->rx - pad * 2;
-
-	while (j < 5)
-	{
-		i = pad - 5;
-		while (i < max + pad + 5)
-				mlx_pixel_put(c3d->mlx, c3d->win, i++, c3d->file->ry - j - c3d->file->ry * 0.06, 0x202020);
-		i = pad - 5;
-		while (i < max + pad + 5)
-				mlx_pixel_put(c3d->mlx, c3d->win, i++, c3d->file->ry - j - c3d->file->ry * 0.04 + 5, 0x202020);
-		j++;
-	}
-	j = 0;
-	while (j < c3d->file->ry * 0.02)
-	{
-		i = pad - 5;
-		while (i <  pad)
-				mlx_pixel_put(c3d->mlx, c3d->win, i++, c3d->file->ry - j - c3d->file->ry * 0.04, 0x202020);
-		i = max + pad;
-		while (i < max + pad + 5)
-				mlx_pixel_put(c3d->mlx, c3d->win, i++, c3d->file->ry - j - c3d->file->ry * 0.04, 0x202020);
-		j++;
-	}
-}
-
-void	drawlife(t_win *c3d)
-{
-	int i;
-	int j = 0;
-	int pad = (c3d->file->rx * 0.4);
-	int max = c3d->file->rx - pad * 2;
-	int pix = max * c3d->player->life / 100;
-
-	if (c3d->player->life <= 0)
-		fail_close(c3d, "YOU DED");
-	while (j < c3d->file->ry * 0.02)
-	{
-		i = pad;
-		while (i < max + pad)
-		{
-				mlx_pixel_put(c3d->mlx, c3d->win, i, c3d->file->ry - j - c3d->file->ry * 0.04, 0xFF5555);
-				i++;
-		}
-		i = pad;
-		while (i < pix + pad)
-		{
-				mlx_pixel_put(c3d->mlx, c3d->win, i, c3d->file->ry - j - c3d->file->ry * 0.04, 0x55FF55);
-				i++;
-		}
-		j++;
-	}
-	drawlifecont(c3d, pad);
-}
-
-int		keyhandle(t_win *c3d)
-{
-	float i;
-	int j;
-	float len;
-	float len2;
-	int horiz;
-
-	i = -30;
-	j = 0;
-	horiz = 1;
-	if (c3d->up || c3d->right || c3d->left || c3d->down || c3d->sleft || c3d->sright || c3d->first)
-	{
-		c3d->first = 0;
-		if (c3d->file->map[(int)(c3d->player->y / 64)][(int)(c3d->player->x / 64)] == 2)
-			c3d->player->life--;
-		if (c3d->left)
-			c3d->player->look -= 3;
-		if (c3d->right)
-			c3d->player->look += 3;
-		if (c3d->up)
-		{
-			if (c3d->file->map[(int)(c3d->player->y) / 64][(int)(c3d->player->x + 10 * cos(PI*c3d->player->look / 180)) / 64] != 1)
-				c3d->player->x += 5 * cos(PI*c3d->player->look/180);
-			if (c3d->file->map[(int)(c3d->player->y + 10 * sin(PI*c3d->player->look/180))/64][(int)(c3d->player->x)/64] != 1)
-				c3d->player->y += 5 * sin(PI*c3d->player->look/180);
-		}
-		if (c3d->down)
-		{
-			if (c3d->file->map[(int)(c3d->player->y)/64][(int)(c3d->player->x - 10 * cos(PI*c3d->player->look/180))/64] != 1)
-				c3d->player->x -= 5 * cos(PI*c3d->player->look/180);
-			if (c3d->file->map[(int)(c3d->player->y - 10 * sin(PI*c3d->player->look/180))/64][(int)(c3d->player->x)/64] != 1)
-				c3d->player->y -= 5 * sin(PI*c3d->player->look/180);
-		}
-		if (c3d->sleft)
-		{
-			if (c3d->file->map[(int)(c3d->player->y)/64][(int)(c3d->player->x + 5 * cos(PI*(c3d->player->look-90)/180))/64] != 1)
-				c3d->player->x += 2 * cos(PI*(c3d->player->look - 90)/180);
-			if (c3d->file->map[(int)(c3d->player->y + 5 * sin(PI*(c3d->player->look-90)/180))/64][(int)(c3d->player->x)/64] != 1)
-				c3d->player->y += 2 * sin(PI*(c3d->player->look - 90)/180);
-		}
-		if (c3d->sright)
-		{
-			if (c3d->file->map[(int)(c3d->player->y)/64][(int)(c3d->player->x - 5 * cos(PI*(c3d->player->look-90)/180))/64] != 1)
-				c3d->player->x -= 2 * cos(PI*(c3d->player->look - 90)/180);
-			if (c3d->file->map[(int)(c3d->player->y - 5 * sin(PI*(c3d->player->look-90)/180))/64][(int)(c3d->player->x)/64] != 1)
-				c3d->player->y -= 2 * sin(PI*(c3d->player->look - 90)/180);
-		}
-		sp_getdist(c3d, c3d->spp);
-		while (i < 30)
-		{
-			len = line2(c3d, c3d->player->x, c3d->player->y, c3d->player->look + i);
-			len2 = line3(c3d, c3d->player->x, c3d->player->y, c3d->player->look + i);
-			if (len2 < len)
-			{
-				len = len2;
-				c3d->player->impx = c3d->player->impx2;
-				c3d->player->impy = c3d->player->impy2;
-				horiz = 0;
-			}
-			else
-				horiz = 1;
-			if (j < c3d->file->rx && j >= 0)
-				raycast(c3d, len * cos (PI * i /180), j, horiz);
-			// line(c3d, c3d->player->x / 64 * 30, c3d->player->y / 64 * 30, c3d->player->impx / 64 * 30, c3d->player->impy / 64 * 30, horiz);
-			i+=(60/(float)c3d->file->rx);
-			j++;
-		}
-		mlx_clear_window(c3d->mlx, c3d->win);
-		mlx_put_image_to_window(c3d->mlx, c3d->win, c3d->img, 0, 0);
-		// drawmap(c3d);
-		drawlife(c3d);
-	}
-	return (0);
-}
-
-int		hook_close(t_win *c3d)
-{
-	mlx_destroy_image(c3d->mlx, c3d->img);
-	ft_free(c3d->file, c3d->file->maph);
-	free(c3d->win);
-	free(c3d->mlx);
-	free(c3d);
-	exit(EXIT_SUCCESS);
-}
-
-void	fail_close(t_win *c3d, char *s)
-{
-	mlx_destroy_image(c3d->mlx, c3d->img);
-	ft_free(c3d->file, c3d->file->maph);
-	free(c3d->win);
-	free(c3d->mlx);
-	free(c3d);
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(s, 2);
-	exit(EXIT_SUCCESS);
-}
-
-int		hook_keypress(int key, t_win *c3d)
-{
-	if (key == UP)
-		c3d->up = 1;
-	if (key == DOWN)
-		c3d->down = 1;
-	if (key == LEFT)
-		c3d->left = 1;
-	if (key == RIGHT)
-		c3d->right = 1;
-	if (key == SLEFT)
-		c3d->sleft = 1;
-	if (key == SRIGHT)
-		c3d->sright = 1;
-	if (key == KEY_C)
-		c3d->player->crch = 1.4;
-	if (key == 53)
-		hook_close(c3d);
-	if (key == KEY_X)
-	{
-		if (c3d->shadow)
-			c3d->shadow = 0;
-		else
-			c3d->shadow = 1;
-	}
-	c3d->first = 1;
-	return (0);
-}
-
-int		hook_keyrelease(int key, t_win *c3d)
-{
-	if (key == UP)
-		c3d->up = 0;
-	if (key == DOWN)
-		c3d->down = 0;
-	if (key == LEFT)
-		c3d->left = 0;
-	if (key == RIGHT)
-		c3d->right = 0;
-	if (key == SLEFT)
-		c3d->sleft = 0;
-	if (key == SRIGHT)
-		c3d->sright = 0;
-	if (key == KEY_C)
-		c3d->player->crch = 2;
-	c3d->first = 1;
-	return (0);
+	c3d->player->impx2 = bx;
+	c3d->player->impy2 = by;
+	return (sqrt(pow(x0 - bx, 2) + pow(y0 - by, 2)));
 }
 
 void	c3d_init(t_win *c3d)
@@ -351,155 +105,65 @@ void	c3d_init(t_win *c3d)
 		fail_close(c3d, "Player struct malloc failed");
 	c3d->first = 1;
 	c3d->shadow = 0;
-	c3d->up = 0;
-	c3d->down = 0;
-	c3d->left = 0;
-	c3d->right = 0;
-	c3d->sright = 0;
-	c3d->sleft = 0;
 	c3d->player->life = 100;
-	c3d->player->x = (c3d->file->plx * WALLWD - WALLWD/2);
-	c3d->player->y = (c3d->file->ply * WALLWD - WALLWD/2);
+	c3d->player->x = (c3d->file->plx * WALLWD - WALLWD / 2);
+	c3d->player->y = (c3d->file->ply * WALLWD - WALLWD / 2);
+	c3d->player->view = 2;
+	c3d->player->crch = 2;
+	c3d->player->oldx = c3d->file->rx / 2;
 	if (c3d->file->pl == 'N')
 		c3d->player->look = 270;
-	else if(c3d->file->pl == 'E')
+	else if (c3d->file->pl == 'E')
 		c3d->player->look = 0;
-	else if(c3d->file->pl == 'W')
+	else if (c3d->file->pl == 'W')
 		c3d->player->look = 180;
-	else if(c3d->file->pl == 'S')
+	else if (c3d->file->pl == 'S')
 		c3d->player->look = 90;
 }
 
-
-
-void	ft_img_loader(t_win *c3d)
+void	ft_hooker(t_win *c3d)
 {
-	int na;
-	int bpp;
-	int endian;
-	void *imgld;
-
-	c3d->img = mlx_new_image(c3d->mlx, c3d->file->rx, c3d->file->ry);
-	c3d->imgbuf = (int *)mlx_get_data_addr(c3d->img, &bpp, &na, &endian);
-
-	if (!(imgld = mlx_xpm_file_to_image(c3d->mlx, c3d->file->no, &c3d->wall_w[0], &c3d->wall_h[0])))
-		fail_close(c3d, "North texture not found");
-	c3d->wall[0] = (int *)mlx_get_data_addr(imgld, &bpp, &na, &endian);
-
-	if (!(imgld = mlx_xpm_file_to_image(c3d->mlx, c3d->file->so, &c3d->wall_w[1], &c3d->wall_h[1])))
-		fail_close(c3d, "South texture not found");
-	c3d->wall[1] = (int *)mlx_get_data_addr(imgld, &bpp, &na, &endian);
-	if (!(imgld = mlx_xpm_file_to_image(c3d->mlx, c3d->file->we, &c3d->wall_w[2], &c3d->wall_h[2])))
-		fail_close(c3d, "West texture not found");
-	c3d->wall[2] = (int *)mlx_get_data_addr(imgld, &bpp, &na, &endian);
-	if (!(imgld = mlx_xpm_file_to_image(c3d->mlx, c3d->file->ea, &c3d->wall_w[3], &c3d->wall_h[3])))
-		fail_close(c3d, "East texture not found");
-	c3d->wall[3] = (int *)mlx_get_data_addr(imgld, &bpp, &na, &endian);
-
-	if (!(imgld = mlx_xpm_file_to_image(c3d->mlx, c3d->file->s, &c3d->sp_w, &c3d->sp_h)))
-		fail_close(c3d, "Sprite texture not found");
-	c3d->sp = (int *)mlx_get_data_addr(imgld, &bpp, &na, &endian);
+	mlx_hook(c3d->win, 17, 0, hook_close, c3d);
+	// mlx_hook(c3d->win, 6, 0, hook_motion, c3d);
+	mlx_hook(c3d->win, 2, 0, hook_keypress, c3d);
+	mlx_hook(c3d->win, 3, 0, hook_keyrelease, c3d);
+	mlx_loop_hook(c3d->mlx, keyhandle, c3d);
+	mlx_loop(c3d->mlx);
 }
 
-int hook_motion(int x, int y, t_win *c3d)
+void	ft_loader(t_win *c3d)
 {
-	x += c3d->file->rx/2;
-	c3d->player->look -= (c3d->player->oldx - x)/2;
-	c3d->player->oldx = x;
-	c3d->player->view = 2;
-	if (y > 2*c3d->file->ry/3)
-		c3d->player->view = 3;
-	else if (y < c3d->file->ry/3)
-		c3d->player->view = 1.5;
-	c3d->first = 1;
-	return (0);
+	ft_img_loader(c3d);
+	ft_sprite_handler(c3d);
+	sp_getdist(c3d, c3d->spp);
+	sp_sort(c3d->spp, c3d);
 }
 
 int		main(int ac, char **av)
 {
-	t_win		*c3d;
+	t_win	*c3d;
 	t_file	*file;
 
-	if (ac == 2)
+	if (ac == 2 || (ac == 3 && ft_strcmp(av[2], "-save") == 0))
 	{
 		if (!(file = malloc(sizeof(t_file))))
-			return (-1);
+			exit(EXIT_FAILURE);
 		ft_parsefile(file, av[1]);
-
-	 	if (!(c3d = malloc(sizeof(t_win))))
-	 		exit(EXIT_FAILURE);
-
-		c3d->file = file;
-		c3d_init(c3d);
-
-	 	if (!(c3d->mlx = mlx_init())
-	 	|| !(c3d->win = mlx_new_window(c3d->mlx, file->rx, file->ry, "cub3d")))
-	 		fail_close(c3d, "Mlx init failed");
-
-		c3d->player->view = 2;
-		c3d->player->oldx = c3d->file->rx/2;
-		c3d->player->crch = 2;
-		ft_img_loader(c3d);
-		ft_sprite_handler(c3d);
-		sp_getdist(c3d, c3d->spp);
-		sp_sort(c3d->spp, c3d);
-
-		mlx_hook(c3d->win, 17, 0, hook_close, c3d);
-	 	// mlx_hook(c3d->win, 6, 0, hook_motion, c3d);
-	 	mlx_hook(c3d->win, 2, 0, hook_keypress, c3d);
-	 	mlx_hook(c3d->win, 3, 0, hook_keyrelease, c3d);
-	 	mlx_loop_hook(c3d->mlx, keyhandle, c3d);
-	 	mlx_loop(c3d->mlx);
-	}
-	else if (ac == 3 && ft_strcmp(av[2], "-save") == 0)
-	{
-		if (!(file = malloc(sizeof(t_file))))
-			return (-1);
-		ft_parsefile(file, av[1]);
-
 		if (!(c3d = malloc(sizeof(t_win))))
 			exit(EXIT_FAILURE);
-
 		c3d->file = file;
 		c3d_init(c3d);
-
-	 	if (!(c3d->mlx = mlx_init()))
-	 		fail_close(c3d, "Mlx init failed");
-		ft_img_loader(c3d);
-
-		float i = -30;
-		int j = 0;
-		int horiz = 1;
-		float len;
-		float len2;
-
-		while (i < 30)
-		{
-			len = line2(c3d, c3d->player->x, c3d->player->y, c3d->player->look + i);
-			len2 = line3(c3d, c3d->player->x, c3d->player->y, c3d->player->look + i);
-			if (len2 < len)
-			{
-				len = len2;
-				c3d->player->impx = c3d->player->impx2;
-				c3d->player->impy = c3d->player->impy2;
-				horiz = 0;
-			}
-			else
-				horiz = 1;
-			if (j < c3d->file->rx && j >= 0)
-				raycast(c3d, len * cos(PI * i / 180), j, horiz);
-			i += (60 / (float)c3d->file->rx);
-			j++;
-		}
-
-		int fd;
-		fd = open("output.bmp", O_WRONLY | O_CREAT | O_TRUNC);
-		ft_write_header(c3d, fd);
-		ft_mirror_img(c3d, fd);
-
-		ft_free(c3d->file, c3d->file->maph);
-		free(c3d->mlx);
-		free(c3d);
+		if (!(c3d->mlx = mlx_init()))
+			fail_close(c3d, "Mlx init failed");
+		if (ac == 2)
+			if (!(c3d->win = mlx_new_window(c3d->mlx, file->rx, file->ry,
+			"Cub3D")))
+				fail_close(c3d, "Mlx init failed");
+		ft_loader(c3d);
 	}
+	if (ac == 2)
+		ft_hooker(c3d);
+	else if (ac == 3 && ft_strcmp(av[2], "-save") == 0)
+		ft_saver(c3d);
 	return (0);
 }

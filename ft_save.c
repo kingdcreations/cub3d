@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/24 11:01:42 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/12/24 14:41:18 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/09 16:53:13 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,6 +15,19 @@
 #include "libft/libft.h"
 #include "minilibx_macos/mlx.h"
 #include "gnl/get_next_line.h"
+
+void	ft_saver(t_win *c3d)
+{
+	int fd;
+
+	rayshoot(c3d);
+	fd = open("output.bmp", O_RDWR | O_CREAT | O_TRUNC, 0666);
+	ft_write_header(c3d, fd);
+	ft_mirror_img(c3d, fd);
+	ft_free(c3d->file, c3d->file->maph);
+	free(c3d->mlx);
+	free(c3d);
+}
 
 void	ft_mirror_img(t_win *c3d, int fd)
 {

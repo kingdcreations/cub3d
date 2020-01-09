@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/07 09:37:35 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/08 12:26:47 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/09 12:54:29 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,14 +16,31 @@
 #include "minilibx_macos/mlx.h"
 #include "gnl/get_next_line.h"
 
-void	sp_sort(t_sp *sp, t_win *c3d)
+void		sp_swap(t_sp *tmp)
 {
-	float mdist;
 	float spx;
 	float spy;
 	float angle;
 	float dist;
-	t_sp *tmp;
+
+	spx = tmp->spx;
+	tmp->spx = tmp->next->spx;
+	tmp->next->spx = spx;
+	spy = tmp->spy;
+	tmp->spy = tmp->next->spy;
+	tmp->next->spy = spy;
+	dist = tmp->dist;
+	tmp->dist = tmp->next->dist;
+	tmp->next->dist = dist;
+	angle = tmp->angle;
+	tmp->angle = tmp->next->angle;
+	tmp->next->angle = angle;
+}
+
+void		sp_sort(t_sp *sp, t_win *c3d)
+{
+	float	mdist;
+	t_sp	*tmp;
 
 	mdist = WALLWD * ((c3d->file->rx / 2) * tan(PI * 60 / 180));
 	while (sp)
@@ -33,21 +50,7 @@ void	sp_sort(t_sp *sp, t_win *c3d)
 		{
 			if (mdist / sp->dist > mdist / sp->next->dist)
 			{
-				spx = tmp->spx;
-				tmp->spx = tmp->next->spx;
-				tmp->next->spx = spx;
-
-				spy = tmp->spy;
-				tmp->spy = tmp->next->spy;
-				tmp->next->spy = spy;
-
-				dist = tmp->dist;
-				tmp->dist = tmp->next->dist;
-				tmp->next->dist = dist;
-
-				angle = tmp->angle;
-				tmp->angle = tmp->next->angle;
-				tmp->next->angle = angle;
+				sp_swap(tmp);
 			}
 			tmp = tmp->next;
 		}
@@ -55,7 +58,12 @@ void	sp_sort(t_sp *sp, t_win *c3d)
 	}
 }
 
-void	sp_getdist(t_win *c3d, t_sp *spp)
+int			sp_getheight(t_win *c3d, float len2)
+{
+	return (c3d->file->ry / c3d->player->view - len2 / c3d->player->crch);
+}
+
+void		sp_getdist(t_win *c3d, t_sp *spp)
 {
 	float	dx;
 	float	dy;
@@ -81,12 +89,12 @@ void	sp_getdist(t_win *c3d, t_sp *spp)
 	}
 }
 
-float	sp_getangle(float angle, float look)
+float		sp_getangle(float angle, float look)
 {
 	angle = (360 - angle) - (look - 60);
 	while (angle < 0)
 		angle += 360;
 	while (angle >= 360)
 		angle -= 360;
-	return (angle);
+	return (angle / 30);
 }

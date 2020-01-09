@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/03 10:32:47 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/08 17:44:07 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/09 15:27:42 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -73,7 +73,8 @@ void	ft_draw_wall(t_win *c3d, float len, int j, int horiz)
 	o = 0;
 	tex = get_texnum(c3d, horiz);
 	i = c3d->file->ry / c3d->player->view - len / c3d->player->crch;
-	while (i < len + c3d->file->ry / c3d->player->view - len / c3d->player->crch && i < c3d->file->ry)
+	while (i < len + c3d->file->ry / c3d->player->view - len / c3d->player->crch
+	&& i < c3d->file->ry)
 	{
 		if (i >= 0 && i < c3d->file->ry)
 		{
@@ -81,9 +82,8 @@ void	ft_draw_wall(t_win *c3d, float len, int j, int horiz)
 			if (tex == 0 || tex == 3)
 				uv++;
 			uv = uv * c3d->wall_h[tex] + get_tex_uvmap(c3d, tex);
-			color = c3d->wall[tex][uv];
-			if (c3d->shadow)
-				color = rgb_shadow_wall(color, len);
+			if (uv >= 0 && uv < c3d->wall_w[tex] * c3d->wall_h[tex])
+				color = rgb_shadow_wall(c3d->wall[tex][uv], len, c3d);
 			c3d->imgbuf[i * c3d->file->rx + j] = color;
 		}
 		i++;
@@ -98,27 +98,44 @@ void	ft_draw_sp(t_win *c3d, float len, int j, t_sp *sp)
 	int		uv;
 	float	len2;
 	float	i2;
-	//
-	// if (j == c3d->file->rx/60)
-	// {
-	// 	dprintf(1, "%f\n", j / 60.0);
-	// }
+
 	len2 = WALLWD / sp->dist * ((c3d->file->rx / 2) * tan(PI * 60 / 180));
 	if (len < len2)
 	{
 		o = -1;
 		i = (c3d->file->ry / c3d->player->view - len2 / c3d->player->crch) - 1;
-		len = sp_getangle(sp->angle, c3d->player->look)/2 * (c3d->file->rx * 2) / 30 - c3d->file->rx;
+		len = (sp_getangle(sp->angle, c3d->player->look) - 1) * c3d->file->rx;
 		i2 = len / 2 - len2 / 2;
 		if (j > i2 && j < len - i2)
-			while (++i < c3d->file->ry + (c3d->file->ry / c3d->player->view - len2 / c3d->player->crch) + (++o)
+			while (++i < c3d->file->ry + sp_getheight(c3d, len2) + (++o)
 			&& i < c3d->file->ry)
-				if (i >= 0 && i < (c3d->file->ry / c3d->player->view - len2 / c3d->player->crch) + len2 - 1)
+				if (i >= 0 && i < sp_getheight(c3d, len2) + len2 - 1)
 				{
-					uv = c3d->sp_w * (int)((o / (len2 / c3d->sp_w)));
-					uv = uv + (int)((j - i2) / (len2 / c3d->sp_h)) % 64;
-					if (c3d->sp[uv])
-						c3d->imgbuf[i * c3d->file->rx + j] = c3d->sp[uv];
+					uv = c3d->sp_w * (int)((o / (len2 / c3d->sp_h)));
+					uv = c3d->sp[uv + (int)((j - i2) / len2 * c3d->sp_w) % 64];
+					uv = rgb_shadow_wall(uv, len2, c3d);
+					if (uv)
+						c3d->imgbuf[i * c3d->file->rx + j] = uv;
 				}
 	}
+}
+
+void	raycast(t_win *c3d, float len, int j, int horiz)
+{
+	t_sp	*sp;
+	float	shift;
+
+	len = WALLWD / len * ((c3d->file->rx / 2) * tan(PI * 60 / 180));
+	shift = c3d->file->ry / c3d->player->view - len / c3d->player->crch;
+	ft_draw_ceil(c3d, shift, j);
+	ft_draw_wall(c3d, len, j, horiz);
+	ft_draw_floor(c3d, shift, j, len);
+	sp_sort(c3d->spp, c3d);
+	sp = c3d->spp;
+	if (sp)
+		while (sp->next)
+		{
+			ft_draw_sp(c3d, len, j, sp);
+			sp = sp->next;
+		}
 }

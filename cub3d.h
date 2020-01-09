@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/10 17:07:44 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/08 15:44:22 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/09 17:04:12 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -142,19 +142,35 @@ void			c3d_init(t_win *c3d);
 void			ft_write_header(t_win *c3d, int fd);
 void			ft_mirror_img(t_win *c3d, int fd);
 void			fail_close(t_win *c3d, char *s);
+void raycast(t_win *c3d, float len, int j, int horiz);
 void			ft_draw_ceil(t_win *c3d, float shift, int j);
 void			ft_draw_floor(t_win *c3d, float shift, int j, int len);
 void			ft_draw_wall(t_win *c3d, float len, int j, int horiz);
 int				rgbtohex(int r, int g, int b);
 void			rgb_shadow(int *r, int *g, int *b, float shade);
-int				rgb_shadow_wall(int color, float len);
+int				rgb_shadow_wall(int color, float len, t_win *c3d);
 int				get_texnum(t_win *c3d, int horiz);
 int				get_tex_uvmap(t_win *c3d, int tex);
 void		ft_sprite_handler(t_win *c3d);
 void		ft_draw_sp(t_win *c3d, float len, int j, t_sp *sp);
+int sp_getheight(t_win *c3d, float len2);
 void		sp_getdist(t_win *c3d, t_sp *spp);
 float	sp_getangle(float angle, float look);
 void	sp_sort(t_sp *sp, t_win *c3d);
+
+int		hook_close(t_win *c3d);
+void	fail_close(t_win *c3d, char *s);
+int		hook_keypress(int key, t_win *c3d);
+int		hook_keyrelease(int key, t_win *c3d);
+void	ft_img_loader(t_win *c3d);
+
+void	drawlife(t_win *c3d);
+void	drawlifecont(t_win *c3d, int pad);
+int		keyhandle(t_win *c3d);
+void	rayshoot(t_win *c3d);
+float linex(t_win *c3d, float x0, float y0, float ang);
+float liney(t_win *c3d, float x0, float y0, float ang);
+void	ft_saver(t_win *c3d);
 
 void	npix(t_win *c3d, int size, int x, int y);
 void line(t_win *c3d, int x0, int y0, int x1, int y1, int color);

@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/12 16:43:40 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/12/16 14:59:09 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/09 10:19:00 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -23,6 +23,7 @@ void	initfile(t_file *file)
 	file->ry = -1;
 	file->pl = 0;
 	file->no = NULL;
+	file->nextl = NULL;
 	file->so = NULL;
 	file->we = NULL;
 	file->ea = NULL;
