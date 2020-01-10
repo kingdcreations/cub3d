@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/10/22 16:21:11 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/12/16 11:44:51 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/10 10:37:48 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -19,7 +19,8 @@ int	ft_output(int ret, char **nextl, char **line, char **buff)
 	if (ret != 0)
 	{
 		if (!(*nextl = ft_strdup_gnl(ft_strchr_gnl(*line, '\n'))) ||
-		!(*line = ft_substr_gnl(*line, 0, ft_strlen_gnl(*line) - ft_strlen_gnl(*nextl))))
+		!(*line = ft_substr_gnl(*line, 0,
+		ft_strlen_gnl(*line) - ft_strlen_gnl(*nextl))))
 			return (0);
 	}
 	else

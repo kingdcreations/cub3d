@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/09 12:56:34 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/09 15:43:58 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/10 14:40:58 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -20,6 +20,7 @@ int		hook_close(t_win *c3d)
 {
 	mlx_destroy_image(c3d->mlx, c3d->img);
 	ft_free(c3d->file, c3d->file->maph);
+	ft_spfree(c3d);
 	free(c3d->win);
 	free(c3d->mlx);
 	free(c3d);
@@ -30,6 +31,7 @@ void	fail_close(t_win *c3d, char *s)
 {
 	mlx_destroy_image(c3d->mlx, c3d->img);
 	ft_free(c3d->file, c3d->file->maph);
+	ft_spfree(c3d);
 	free(c3d->win);
 	free(c3d->mlx);
 	free(c3d);

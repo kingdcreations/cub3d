@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/03 12:45:15 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/09 10:36:07 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/10 12:43:00 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -56,11 +56,11 @@ int		get_texnum(t_win *c3d, int horiz)
 	int sideh;
 	int sidev;
 
-	if (c3d->player->y < c3d->player->impy)
+	if (c3d->player->y < c3d->ay)
 		sideh = 'N';
 	else
 		sideh = 'S';
-	if (c3d->player->x < c3d->player->impx)
+	if (c3d->player->x < c3d->ax)
 		sidev = 'E';
 	else
 		sidev = 'W';
@@ -81,13 +81,13 @@ int		get_tex_uvmap(t_win *c3d, int tex)
 
 	texy = 0;
 	if (tex == 0)
-		texy = c3d->wall_w[0] - c3d->player->impx / 64 * c3d->wall_w[0];
+		texy = c3d->wall_w[0] - c3d->ax / 64 * c3d->wall_w[0];
 	else if (tex == 1)
-		texy = c3d->player->impx / 64 * c3d->wall_w[1];
+		texy = c3d->ax / 64 * c3d->wall_w[1];
 	else if (tex == 2)
-		texy = c3d->player->impy / 64 * c3d->wall_w[2];
+		texy = c3d->ay / 64 * c3d->wall_w[2];
 	else if (tex == 3)
-		texy = c3d->wall_w[3] - (c3d->player->impy / 64 * c3d->wall_w[3]);
+		texy = c3d->wall_w[3] - (c3d->ay / 64 * c3d->wall_w[3]);
 	texy = texy % c3d->wall_w[tex];
 	if (tex == 0 || tex == 3)
 		texy--;

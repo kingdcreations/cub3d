@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/09 13:02:39 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/09 13:17:19 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/10 13:55:37 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,6 +15,53 @@
 #include "libft/libft.h"
 #include "minilibx_macos/mlx.h"
 #include "gnl/get_next_line.h"
+
+void	npix(t_win *c3d, int color, int x0, int y0)
+{
+	int x;
+	int y;
+	int i;
+	int j;
+	int size;
+
+	i = 0;
+	j = 0;
+	size = c3d->file->rx / 100;
+	if (size > c3d->file->ry / 100)
+		size = c3d->file->ry / 100;
+	while (i < size)
+	{
+		j = 0;
+		while (j < size)
+		{
+			x = i + y0 * size + size;
+			y = j + x0 * size + size;
+			ft_pcolor(c3d, x, y, color);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	drawmap(t_win *c3d)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (i < c3d->file->maph)
+	{
+		j = 0;
+		while (j < c3d->file->mapw)
+		{
+			if (c3d->file->map[i][j] == 1)
+				npix(c3d, 0xFFFFFF, j, i);
+			j++;
+		}
+		i++;
+	}
+	npix(c3d, 0xFF0000, c3d->player->x / 64, c3d->player->y / 64);
+}
 
 int		life_getj(t_win *c3d, int j)
 {

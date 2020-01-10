@@ -27,7 +27,7 @@ SRC =	main.c \
 			ft_bonus.c \
 			ft_keyhandling.c \
 			ft_image.c \
-			debug.c \
+			ft_dda.c \
 
 OBJ		=	$(SRC:%.c=%.o)
 
@@ -45,7 +45,7 @@ $(NAME): $(OBJ) $(LIBFT) $(MINILIBX)
 	@echo "${DONE}Making libcub3d.a${NC}"
 	@cp libft/libft.a $(NAME)
 	@ar rcs $(NAME) $(OBJ)
-	gcc -g3 -Wall -Werror -Wextra -O3 main.c minilibx_macos/libmlx.a -L. -lcub3d -framework OpenGL -framework AppKit -o cub3d
+	gcc -Wall -Werror -Wextra -O3 main.c minilibx_macos/libmlx.a -L. -lcub3d -framework OpenGL -framework AppKit -o cub3d
 
 %.o: %.c libftprintf.h libft/libft.h
 	@$(CC) -o $@ -c $<
@@ -62,7 +62,8 @@ fclean: clean
 	@make fclean -C libft
 	@make clean -C minilibx_macos
 
-bonus: $(NAME)
+bonus: all
+	gcc -Wall -Werror -Wextra -O3 main_bonus.c minilibx_macos/libmlx.a -L. -lcub3d -framework OpenGL -framework AppKit -o cub3d
 
 re: fclean all
 

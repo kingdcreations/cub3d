@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/09 13:21:21 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/09 17:06:38 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/10 14:09:24 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,6 +15,20 @@
 #include "libft/libft.h"
 #include "minilibx_macos/mlx.h"
 #include "gnl/get_next_line.h"
+
+float	ft_swap(t_win *c3d, float lnx, float lny, int *horiz)
+{
+	if (lny < lnx)
+	{
+		lnx = lny;
+		c3d->ax = c3d->bx;
+		c3d->ay = c3d->by;
+		*horiz = 0;
+	}
+	else
+		*horiz = 1;
+	return (lnx);
+}
 
 void	rayshoot(t_win *c3d)
 {
@@ -30,15 +44,8 @@ void	rayshoot(t_win *c3d)
 	{
 		lnx = linex(c3d, c3d->player->x, c3d->player->y, c3d->player->look + i);
 		lny = liney(c3d, c3d->player->x, c3d->player->y, c3d->player->look + i);
-		if (lny < lnx)
-		{
-			lnx = lny;
-			c3d->player->impx = c3d->player->impx2;
-			c3d->player->impy = c3d->player->impy2;
-			horiz = 0;
-		}
-		else
-			horiz = 1;
+		lnx = ft_swap(c3d, lnx, lny, &horiz);
+		c3d->cosi = tan(PI * 60 / 180) / cos(PI * i / 180);
 		if (++j < c3d->file->rx && j >= 0)
 			raycast(c3d, lnx * cos(PI * i / 180), j, horiz);
 		i += (60 / (float)c3d->file->rx);
@@ -93,6 +100,7 @@ int		keyhandle(t_win *c3d)
 		sp_getdist(c3d, c3d->spp);
 		rayshoot(c3d);
 		drawlife(c3d);
+		drawmap(c3d);
 		mlx_put_image_to_window(c3d->mlx, c3d->win, c3d->img, 0, 0);
 	}
 	return (0);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   main.c                                           .::    .:/ .      .::   */
+/*   main_bonus.c                                     .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/11/29 12:13:52 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/10 14:20:16 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/10 13:27:24 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -51,6 +51,7 @@ void	c3d_init(t_win *c3d)
 void	ft_hooker(t_win *c3d)
 {
 	mlx_hook(c3d->win, 17, 0, hook_close, c3d);
+	mlx_hook(c3d->win, 6, 0, hook_motion, c3d);
 	mlx_hook(c3d->win, 2, 0, hook_keypress, c3d);
 	mlx_hook(c3d->win, 3, 0, hook_keyrelease, c3d);
 	mlx_loop_hook(c3d->mlx, keyhandle, c3d);

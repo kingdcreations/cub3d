@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/07 09:37:35 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/07 17:14:11 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/10 14:39:16 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -52,30 +52,48 @@ void	sp_lstadd_back(t_sp **alst, t_sp *new, int i, int j)
 	}
 }
 
+void	ft_spfree(t_win *c3d)
+{
+	t_sp *lst;
+	t_sp *tmp;
+
+	lst = c3d->spp;
+	if (lst)
+		while (lst)
+		{
+			if (lst->next)
+				tmp = lst->next;
+			else
+				tmp = NULL;
+			free(lst);
+			lst = tmp;
+		}
+}
+
 void	ft_sprite_handler(t_win *c3d)
 {
 	int		i;
 	int		j;
 	int		n;
 	t_sp	*sp;
+	t_sp	*new;
 
-	j = 0;
+	j = -1;
 	n = 0;
-	sp = sp_new();
+	if (!(sp = sp_new()))
+		fail_close(c3d, "Linked list allocation failed.");
 	c3d->spp = sp;
-	while (j < c3d->file->maph)
+	while (++j < c3d->file->maph)
 	{
-		i = 0;
-		while (i < c3d->file->mapw)
-		{
+		i = -1;
+		while (++i < c3d->file->mapw)
 			if (c3d->file->map[j][i] == 2)
 			{
 				n++;
-				sp_lstadd_back(&c3d->spp, sp_new(), i, j);
+				if (!(new = sp_new()))
+					fail_close(c3d, "Linked list allocation failed.");
+				sp_lstadd_back(&c3d->spp, new, i, j);
 			}
-			i++;
-		}
-		j++;
 	}
 	c3d->sp_nb = n;
 }
