@@ -1,19 +1,18 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   ft_sprite.c                                      .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/01/07 09:37:35 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/09 12:54:29 by tmarcon     ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_sprite.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tmarcon <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/07 09:37:35 by tmarcon           #+#    #+#             */
+/*   Updated: 2020/08/03 11:25:35 by user42           ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include "libft/libft.h"
-#include "minilibx_macos/mlx.h"
+#include "minilibx-linux/mlx.h"
 #include "gnl/get_next_line.h"
 
 void		sp_swap(t_sp *tmp)
@@ -37,21 +36,17 @@ void		sp_swap(t_sp *tmp)
 	tmp->next->angle = angle;
 }
 
-void		sp_sort(t_sp *sp, t_win *c3d)
+void		sp_sort(t_sp *sp)
 {
-	float	mdist;
 	t_sp	*tmp;
 
-	mdist = WALLWD * ((c3d->file->rx / 2) * tan(PI * 60 / 180));
 	while (sp)
 	{
 		tmp = sp;
 		while (tmp->next)
 		{
-			if (mdist / sp->dist > mdist / sp->next->dist)
-			{
+			if (sp->dist < sp->next->dist)
 				sp_swap(tmp);
-			}
 			tmp = tmp->next;
 		}
 		sp = sp->next;

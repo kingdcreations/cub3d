@@ -1,19 +1,19 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   ft_keyhandling.c                                 .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/01/09 13:21:21 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/10 14:09:24 by tmarcon     ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_keyhandling.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tmarcon <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/09 13:21:21 by tmarcon           #+#    #+#             */
+/*   Updated: 2020/08/03 15:46:37 by user42           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include "libft/libft.h"
-#include "minilibx_macos/mlx.h"
+#include "minilibx-linux/mlx.h"
 #include "gnl/get_next_line.h"
 
 float	ft_swap(t_win *c3d, float lnx, float lny, int *horiz)
@@ -99,7 +99,7 @@ int		keyhandle(t_win *c3d)
 		ft_collider(c3d);
 		sp_getdist(c3d, c3d->spp);
 		rayshoot(c3d);
-		drawlife(c3d);
+		// drawlife(c3d);
 		drawmap(c3d);
 		mlx_put_image_to_window(c3d->mlx, c3d->win, c3d->img, 0, 0);
 	}

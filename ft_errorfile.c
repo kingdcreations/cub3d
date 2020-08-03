@@ -1,19 +1,19 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   ft_errorfile.c                                   .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/12/16 14:46:23 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/12/17 14:42:24 by tmarcon     ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_errorfile.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tmarcon <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/16 14:46:23 by tmarcon           #+#    #+#             */
+/*   Updated: 2020/08/03 11:51:02 by user42           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include "libft/libft.h"
-#include "minilibx_macos/mlx.h"
+#include "minilibx-linux/mlx.h"
 #include "gnl/get_next_line.h"
 
 void	ft_checkfc(t_file *file, char *line)
@@ -63,7 +63,7 @@ void	ft_error(t_file *file, char *s, int i)
 
 void	ft_maperror(t_file *file, char c, int j, int k)
 {
-	if (!(c == '0' || c == '1' || c == '2'
+	if (!(c == '0' || c == '1' || c == '2' || c == '3'
 	|| c == 'N' || c == 'S' || c == 'E' || c == 'W'))
 		ft_error(file, "Bad character into map parsing.", j + 1);
 	if (file->map[j][k] == 0 &&

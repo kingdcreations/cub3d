@@ -1,14 +1,13 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   cub3d.h                                          .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/12/10 17:07:44 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/10 14:39:25 by tmarcon     ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tmarcon <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/10 17:07:44 by tmarcon           #+#    #+#             */
+/*   Updated: 2020/08/03 14:51:03 by user42           ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
@@ -18,20 +17,12 @@
 # include <stdlib.h>
 # include <math.h>
 # include <fcntl.h>
-
-# define LEFT 123
-# define RIGHT 124
-
-# define UP 13
-# define DOWN 1
-# define WALLWD 64
-
-# define KEY_X 7
-# define KEY_C 8
+# include "key.h"
 
 # define SLEFT 0
 # define SRIGHT 2
 
+# define WALLWD 64
 # define PI 3.141592654
 
 typedef struct	s_pl
@@ -114,6 +105,8 @@ typedef struct	s_win
 	float	by;
 	float	cosi;
 
+	void		*tex[5];
+
 	int		*wall[4];
 	int		wall_w[4];
 	int		wall_h[4];
@@ -157,7 +150,7 @@ void			ft_draw_sp(t_win *c3d, float len, int j, t_sp *sp);
 int				sp_getheight(t_win *c3d, float len2);
 void			sp_getdist(t_win *c3d, t_sp *spp);
 float			sp_getangle(float angle, float look);
-void			sp_sort(t_sp *sp, t_win *c3d);
+void			sp_sort(t_sp *sp);
 
 int				hook_close(t_win *c3d);
 void			fail_close(t_win *c3d, char *s);
@@ -175,6 +168,7 @@ void			rayshoot(t_win *c3d);
 float			linex(t_win *c3d, float x0, float y0, float ang);
 float			liney(t_win *c3d, float x0, float y0, float ang);
 void			ft_saver(t_win *c3d);
+void			ft_loader(t_win *c3d);
 
 void			npix(t_win *c3d, int size, int x, int y);
 void			drawmap(t_win *c3d);

@@ -1,19 +1,19 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   ft_sprite_list.c                                 .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/01/07 09:37:35 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/10 14:39:16 by tmarcon     ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_sprite_list.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tmarcon <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/07 09:37:35 by tmarcon           #+#    #+#             */
+/*   Updated: 2020/08/03 11:50:34 by user42           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include "libft/libft.h"
-#include "minilibx_macos/mlx.h"
+#include "minilibx-linux/mlx.h"
 #include "gnl/get_next_line.h"
 
 t_sp	*sp_new(void)
@@ -23,6 +23,7 @@ t_sp	*sp_new(void)
 	if (!(sp = malloc(sizeof(t_sp))))
 		return (NULL);
 	sp->next = NULL;
+	sp->dist = 0;
 	return (sp);
 }
 
@@ -87,7 +88,7 @@ void	ft_sprite_handler(t_win *c3d)
 	{
 		i = -1;
 		while (++i < c3d->file->mapw)
-			if (c3d->file->map[j][i] == 2)
+			if (c3d->file->map[j][i] == 2 || c3d->file->map[j][i] == 3)
 			{
 				n++;
 				if (!(new = sp_new()))

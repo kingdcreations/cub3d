@@ -1,19 +1,19 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   ft_bonus.c                                       .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/01/09 13:02:39 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/10 13:55:37 by tmarcon     ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_bonus_off.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tmarcon <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/09 13:02:39 by tmarcon           #+#    #+#             */
+/*   Updated: 2020/08/03 11:51:22 by user42           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include "libft/libft.h"
-#include "minilibx_macos/mlx.h"
+#include "minilibx-linux/mlx.h"
 #include "gnl/get_next_line.h"
 
 void	npix(t_win *c3d, int color, int x0, int y0)
@@ -81,7 +81,10 @@ void	drawlife(t_win *c3d)
 	max = c3d->file->rx - pad * 2;
 	pix = max * c3d->player->life / 100;
 	if (c3d->player->life <= 0)
-		fail_close(c3d, "YOU DED");
+	{
+		ft_putstr("YOU ARE DEAD AHAH.");
+		hook_close(c3d);
+	}
 	while (j < c3d->file->ry * 0.02)
 	{
 		i = pad - 1;

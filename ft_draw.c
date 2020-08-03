@@ -1,20 +1,19 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   ft_draw.c                                        .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2020/01/03 10:32:47 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/10 13:15:19 by tmarcon     ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_draw.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tmarcon <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/03 10:32:47 by tmarcon           #+#    #+#             */
+/*   Updated: 2020/08/03 11:51:08 by user42           ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include <stdio.h>
 #include "libft/libft.h"
-#include "minilibx_macos/mlx.h"
+#include "minilibx-linux/mlx.h"
 #include "gnl/get_next_line.h"
 
 void	ft_draw_ceil(t_win *c3d, float shift, int j)
@@ -68,7 +67,7 @@ void	ft_draw_wall(t_win *c3d, float len, int j, int horiz)
 	int		o;
 	int		uv;
 	int		tex;
-	int		color;
+	int		color = 0;
 
 	o = 0;
 	tex = get_texnum(c3d, horiz);
@@ -130,7 +129,7 @@ void	raycast(t_win *c3d, float len, int j, int horiz)
 	ft_draw_ceil(c3d, shift, j);
 	ft_draw_wall(c3d, len, j, horiz);
 	ft_draw_floor(c3d, shift, j, len);
-	sp_sort(c3d->spp, c3d);
+	sp_sort(c3d->spp);
 	sp = c3d->spp;
 	if (sp)
 		while (sp->next)

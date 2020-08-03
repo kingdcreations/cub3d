@@ -1,19 +1,18 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   ft_save.c                                        .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/12/24 11:01:42 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/09 16:53:13 by tmarcon     ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_save.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tmarcon <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/24 11:01:42 by tmarcon           #+#    #+#             */
+/*   Updated: 2020/08/03 12:13:59 by user42           ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include "libft/libft.h"
-#include "minilibx_macos/mlx.h"
+#include "minilibx-linux/mlx.h"
 #include "gnl/get_next_line.h"
 
 void	ft_saver(t_win *c3d)
@@ -52,7 +51,8 @@ void	ft_mirror_img(t_win *c3d, int fd)
 		}
 		j++;
 	}
-	write(fd, test, c3d->file->rx * c3d->file->ry * 4);
+	if (!write(fd, test, c3d->file->rx * c3d->file->ry * 4))
+		return ;
 }
 
 void	ft_write_header(t_win *c3d, int fd)
@@ -73,5 +73,6 @@ void	ft_write_header(t_win *c3d, int fd)
 	header[25] = (unsigned char)(c3d->file->ry >> 24);
 	header[26] = (unsigned char)(1);
 	header[28] = (unsigned char)(32);
-	write(fd, header, 54);
+	if (!write(fd, header, 54))
+		return ;
 }
