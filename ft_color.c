@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/03 12:45:15 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/10 12:43:00 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/13 13:21:56 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -26,6 +26,12 @@ void	rgb_shadow(int *r, int *g, int *b, float shade)
 	*r *= shade;
 	*g *= shade;
 	*b *= shade;
+	if (*r > 255)
+		*r = 255;
+	if (*g > 255)
+		*g = 255;
+	if (*b > 255)
+		*b = 255;
 }
 
 int		rgb_shadow_wall(int color, float len, t_win *c3d)
@@ -65,13 +71,13 @@ int		get_texnum(t_win *c3d, int horiz)
 	else
 		sidev = 'W';
 	if (horiz && sideh == 'N')
-		return (0);
-	else if (horiz && sideh == 'S')
 		return (1);
+	else if (horiz && sideh == 'S')
+		return (0);
 	else if (!horiz && sidev == 'E')
-		return (2);
-	else if (!horiz && sidev == 'W')
 		return (3);
+	else if (!horiz && sidev == 'W')
+		return (2);
 	return (-1);
 }
 

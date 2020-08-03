@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/09 16:02:04 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/09 16:12:05 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/13 16:40:22 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,6 +15,20 @@
 #include "libft/libft.h"
 #include "minilibx_macos/mlx.h"
 #include "gnl/get_next_line.h"
+
+void	ft_pcolor(t_win *c3d, int i, int j, int color)
+{
+	if (i < c3d->file->ry && j < c3d->file->rx
+	&& i >= 0 && j >= 0)
+		c3d->imgbuf[i * c3d->file->rx + j] = color;
+}
+
+void	ft_loader(t_win *c3d)
+{
+	ft_img_loader(c3d);
+	ft_sprite_handler(c3d);
+	sp_getdist(c3d, c3d->spp);
+}
 
 void	ft_img_loader(t_win *c)
 {

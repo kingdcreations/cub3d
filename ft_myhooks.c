@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/09 12:56:34 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/10 14:40:58 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/13 17:11:16 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -19,22 +19,30 @@
 int		hook_close(t_win *c3d)
 {
 	mlx_destroy_image(c3d->mlx, c3d->img);
+	free(c3d->sp);
+	free(c3d->wall[0]);
+	free(c3d->wall[1]);
+	free(c3d->wall[2]);
+	free(c3d->wall[3]);
 	ft_free(c3d->file, c3d->file->maph);
 	ft_spfree(c3d);
-	free(c3d->win);
-	free(c3d->mlx);
-	free(c3d);
+	mlx_clear_window(c3d->mlx, c3d->win);
+	mlx_destroy_window(c3d->mlx, c3d->win);
 	exit(EXIT_SUCCESS);
 }
 
 void	fail_close(t_win *c3d, char *s)
 {
 	mlx_destroy_image(c3d->mlx, c3d->img);
+	free(c3d->sp);
+	free(c3d->wall[0]);
+	free(c3d->wall[1]);
+	free(c3d->wall[2]);
+	free(c3d->wall[3]);
 	ft_free(c3d->file, c3d->file->maph);
 	ft_spfree(c3d);
-	free(c3d->win);
-	free(c3d->mlx);
-	free(c3d);
+	mlx_clear_window(c3d->mlx, c3d->win);
+	mlx_destroy_window(c3d->mlx, c3d->win);
 	ft_putstr_fd("Error\n", 2);
 	ft_putstr_fd(s, 2);
 	exit(EXIT_SUCCESS);

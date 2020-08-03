@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/07 09:37:35 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/10 14:39:16 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/13 12:51:43 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -23,6 +23,7 @@ t_sp	*sp_new(void)
 	if (!(sp = malloc(sizeof(t_sp))))
 		return (NULL);
 	sp->next = NULL;
+	sp->dist = 0;
 	return (sp);
 }
 
@@ -87,7 +88,7 @@ void	ft_sprite_handler(t_win *c3d)
 	{
 		i = -1;
 		while (++i < c3d->file->mapw)
-			if (c3d->file->map[j][i] == 2)
+			if (c3d->file->map[j][i] == 2 || c3d->file->map[j][i] == 3)
 			{
 				n++;
 				if (!(new = sp_new()))

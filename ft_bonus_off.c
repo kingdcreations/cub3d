@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   ft_bonus.c                                       .::    .:/ .      .::   */
+/*   ft_bonus_off.c                                   .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/09 13:02:39 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/10 13:55:37 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/13 13:53:15 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -81,7 +81,10 @@ void	drawlife(t_win *c3d)
 	max = c3d->file->rx - pad * 2;
 	pix = max * c3d->player->life / 100;
 	if (c3d->player->life <= 0)
-		fail_close(c3d, "YOU DED");
+	{
+		ft_putstr("YOU ARE DEAD AHAH.");
+		hook_close(c3d);
+	}
 	while (j < c3d->file->ry * 0.02)
 	{
 		i = pad - 1;

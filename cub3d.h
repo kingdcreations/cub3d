@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/10 17:07:44 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/10 14:39:25 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/13 16:40:40 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -157,7 +157,7 @@ void			ft_draw_sp(t_win *c3d, float len, int j, t_sp *sp);
 int				sp_getheight(t_win *c3d, float len2);
 void			sp_getdist(t_win *c3d, t_sp *spp);
 float			sp_getangle(float angle, float look);
-void			sp_sort(t_sp *sp, t_win *c3d);
+void			sp_sort(t_sp *sp);
 
 int				hook_close(t_win *c3d);
 void			fail_close(t_win *c3d, char *s);
@@ -175,6 +175,7 @@ void			rayshoot(t_win *c3d);
 float			linex(t_win *c3d, float x0, float y0, float ang);
 float			liney(t_win *c3d, float x0, float y0, float ang);
 void			ft_saver(t_win *c3d);
+void			ft_loader(t_win *c3d);
 
 void			npix(t_win *c3d, int size, int x, int y);
 void			drawmap(t_win *c3d);

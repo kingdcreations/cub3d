@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/12/12 14:28:46 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/09 10:51:47 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/14 10:40:38 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -73,9 +73,24 @@ int		get_file(t_file *file, char *name)
 	return (1);
 }
 
+int		iscubfile(char *s)
+{
+	int i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	i--;
+	if (s[i] == 'b' && s[i - 1] == 'u' && s[i - 2] == 'c' && s[i - 3] == '.')
+		return (1);
+	return (0);
+}
+
 void	ft_parsefile(t_file *file, char *filename)
 {
 	initfile(file);
+	if (!iscubfile(filename))
+		ft_error(file, "Map must be a .cub file", 0);
 	get_file(file, filename);
 	parsemap(file);
 	ft_checkerror(file);

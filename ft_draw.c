@@ -6,7 +6,7 @@
 /*   By: tmarcon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2020/01/03 10:32:47 by tmarcon      #+#   ##    ##    #+#       */
-/*   Updated: 2020/01/10 13:15:19 by tmarcon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2020/01/13 12:08:14 by tmarcon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -130,7 +130,7 @@ void	raycast(t_win *c3d, float len, int j, int horiz)
 	ft_draw_ceil(c3d, shift, j);
 	ft_draw_wall(c3d, len, j, horiz);
 	ft_draw_floor(c3d, shift, j, len);
-	sp_sort(c3d->spp, c3d);
+	sp_sort(c3d->spp);
 	sp = c3d->spp;
 	if (sp)
 		while (sp->next)
