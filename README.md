@@ -21,3 +21,8 @@ The goal of ``cub3d`` is to make *something* using raycasting (like [Wolfenstein
 * Use C to crouch
 * Use X to enable depth shading
 * Use ESC to quit game
+
+## More
+
+* [Linux version](https://github.com/kingdcreations/cub3d/tree/linux)
+* [Web version](https://thais-marcon.com/raycasting/)
